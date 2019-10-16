@@ -1,5 +1,7 @@
 package io.cnaik.service;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hudson.FilePath;
 import hudson.ProxyConfiguration;
 import hudson.model.Result;
@@ -66,7 +68,24 @@ public class CommonUtil {
         if(false) {
             json = responseMessageUtil.createCardMessage();
         } else {
-            json = "{ \"text\": \"" + responseMessageUtil.createTextMessage() + "\"}";
+            class Response {
+                public String text;
+
+                public void setText(String text) {
+                    this.text = text;
+                }
+            }
+            Response response = new Response() {
+                {
+                    setText(responseMessageUtil.createTextMessage());
+                }
+            };
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
+            try {
+            json = mapper.writeValueAsString(response);
+            } catch (Exception e) {
+            }
         }
 
         if (logUtil.printLogEnabled()) {

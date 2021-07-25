@@ -32,9 +32,11 @@ public class ResponseMessageUtil {
 
     public String createCardMessage() {
 
-        String text = escapeSpecialCharacter(replaceJenkinsKeywords(replaceBuildStatusKeywordWithColorCode(googleChatNotification.getMessage())));
+        String json = replaceJenkinsKeywords(replaceBuildStatusKeywordWithColorCode(googleChatNotification.getMessage()));
+        
+        return json;
 
-        TextParagraph textParagraph = createTextParagraph(text);
+        /*TextParagraph textParagraph = createTextParagraph(text);
 
         Widgets[] widgets = createWidgets(1);
         widgets = addNewWidget(widgets, 0, textParagraph);
@@ -48,7 +50,7 @@ public class ResponseMessageUtil {
 
         Response response = new Response(cards);
 
-        return new JSONObject(response).toString();
+        return new JSONObject(response).toString();*/
     }
 
     private String escapeSpecialCharacter(String input) {

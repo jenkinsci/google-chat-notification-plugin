@@ -1,12 +1,5 @@
 package io.cnaik.service;
 
-import hudson.FilePath;
-import hudson.ProxyConfiguration;
-import hudson.model.Result;
-import hudson.model.Run;
-import hudson.model.TaskListener;
-import io.cnaik.GoogleChatNotification;
-import jenkins.model.Jenkins;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -28,6 +21,14 @@ import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.util.EntityUtils;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
+
+import hudson.FilePath;
+import hudson.ProxyConfiguration;
+import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import io.cnaik.GoogleChatNotification;
+import jenkins.model.Jenkins;
 
 public class CommonUtil {
 
@@ -63,7 +64,7 @@ public class CommonUtil {
 
         String json = "";
 
-        if(false) {
+        if(googleChatNotification.isCardMessageFormat()) {
             json = responseMessageUtil.createCardMessage();
         } else {
             json = "{ \"text\": \"" + responseMessageUtil.createTextMessage() + "\"}";

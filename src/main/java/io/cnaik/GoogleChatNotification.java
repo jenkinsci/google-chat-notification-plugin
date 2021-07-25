@@ -130,11 +130,11 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     }
     
     public boolean isSimpleMessageFormat() {
-        return getMessageFormat().equals(MESSAGE_FORMAT_SIMPLE);
+        return MESSAGE_FORMAT_SIMPLE.equals(getMessageFormat());
     }
     
     public boolean isCardMessageFormat() {
-        return getMessageFormat().equals(MESSAGE_FORMAT_CARD);
+        return MESSAGE_FORMAT_CARD.equals(getMessageFormat());
     }
 
     public boolean isNotifyAborted() {
@@ -241,6 +241,8 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     @Symbol("googlechatnotification")
     @Extension
     public static class Descriptor extends BuildStepDescriptor<Publisher> {
+        
+        public static final String defaultMessageFormat = MESSAGE_FORMAT_SIMPLE;
 
         private String url;
         private String message;
@@ -331,7 +333,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         }
         
         public String getMessageFormat() {
-            return messageFormat;
+            return messageFormat != null ? messageFormat : defaultMessageFormat;
         }
 
         public boolean isNotifyAborted() {

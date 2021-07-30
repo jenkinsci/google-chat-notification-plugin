@@ -37,9 +37,9 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     private boolean suppressInfoLoggers;
     private boolean sameThreadNotification;
 
-    private TaskListener taskListener;
-    private FilePath ws;
-    private Run build;
+    private transient TaskListener taskListener;
+    private transient FilePath ws;
+    private transient Run build;
     private LogUtil logUtil;
     private ResponseMessageUtil responseMessageUtil;
 

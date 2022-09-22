@@ -28,6 +28,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
     private String url;
     private String message;
+    private String threadKey;
     private boolean notifyAborted;
     private boolean notifyFailure;
     private boolean notifyNotBuilt;
@@ -35,7 +36,6 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     private boolean notifyUnstable;
     private boolean notifyBackToNormal;
     private boolean suppressInfoLoggers;
-    private boolean sameThreadNotification;
 
     private TaskListener taskListener;
     private FilePath ws;
@@ -47,6 +47,12 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     public GoogleChatNotification(String url, String message) {
         this.url = url;
         this.message = message;
+    }
+
+
+    @DataBoundSetter
+    public void setThreadKey(String threadKey) {
+        this.threadKey = threadKey;
     }
 
     @DataBoundSetter
@@ -84,11 +90,6 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         this.suppressInfoLoggers = suppressInfoLoggers;
     }
 
-    @DataBoundSetter
-    public void setSameThreadNotification(boolean sameThreadNotification) {
-        this.sameThreadNotification = sameThreadNotification;
-    }
-
     public String getUrl() {
         if(url == null || url.equals("")) {
             return getDescriptor().getUrl();
@@ -102,6 +103,15 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
             return getDescriptor().getMessage();
         } else {
             return message;
+        }
+    }
+
+
+    public String getThreadKey() {
+        if(threadKey == null || threadKey.equals("")) {
+            return getDescriptor().getThreadKey();
+        } else {
+            return threadKey;
         }
     }
 
@@ -131,10 +141,6 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
     public boolean isSuppressInfoLoggers() {
         return suppressInfoLoggers;
-    }
-
-    public boolean isSameThreadNotification() {
-        return sameThreadNotification;
     }
 
     public TaskListener getTaskListener() {
@@ -212,6 +218,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
         private String url;
         private String message;
+        private String threadKey;
         private boolean notifyAborted;
         private boolean notifyFailure;
         private boolean notifyNotBuilt;
@@ -219,7 +226,6 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         private boolean notifyUnstable;
         private boolean notifyBackToNormal;
         private boolean suppressInfoLoggers;
-        private boolean sameThreadNotification;
 
         public Descriptor() {
             load();
@@ -254,6 +260,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
             // set that to properties and call save().
             url = formData.getString("url");
             message = formData.getString("message");
+            threadKey = formData.getString("threadKey");
             notifyAborted = formData.getBoolean("notifyAborted");
             notifyFailure = formData.getBoolean("notifyFailure");
             notifyNotBuilt = formData.getBoolean("notifyNotBuilt");
@@ -261,7 +268,6 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
             notifyUnstable = formData.getBoolean("notifyUnstable");
             notifyBackToNormal = formData.getBoolean("notifyBackToNormal");
             suppressInfoLoggers = formData.getBoolean("suppressInfoLoggers");
-            sameThreadNotification = formData.getBoolean("sameThreadNotification");
 
             // ^Can also use req.bindJSON(this, formData);
             save();
@@ -274,6 +280,10 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
         public String getMessage() {
             return message;
+        }
+
+        public String getThreadKey() {
+            return threadKey;
         }
 
         public boolean isNotifyAborted() {
@@ -303,10 +313,6 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         public boolean isSuppressInfoLoggers() {
             return suppressInfoLoggers;
         }
-
-        public boolean isSameThreadNotification() {
-            return sameThreadNotification;
-        }
     }
 
     private void performAction() {
@@ -325,6 +331,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         return "GoogleChatNotification{" +
                 "url='" + url + '\'' +
                 ", message='" + message + '\'' +
+                ", message='" + threadKey + '\'' +
                 ", notifyAborted=" + notifyAborted +
                 ", notifyFailure=" + notifyFailure +
                 ", notifyNotBuilt=" + notifyNotBuilt +
@@ -332,7 +339,6 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
                 ", notifyUnstable=" + notifyUnstable +
                 ", notifyBackToNormal=" + notifyBackToNormal +
                 ", suppressInfoLoggers=" + suppressInfoLoggers +
-                ", sameThreadNotification=" + sameThreadNotification +
                 '}';
     }
 }

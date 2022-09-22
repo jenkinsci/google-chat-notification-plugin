@@ -1,3 +1,11 @@
+# 1.5 release notes
+
+### Plugin is supported for Jenkins version 2.60.3 or higher.
+
+New Features:
+
+- Add support for threaded messages with dynamic threadKey
+
 # 1.4 release notes
 
 ### Plugin is supported for Jenkins version 2.60.3 or higher.

@@ -1,3 +1,11 @@
+# 1.6 release notes
+
+### Plugin is supported for Jenkins version 2.387.1 or higher.
+
+Issue:
+
+- Apache HttpClient class replace with Java 11 Http class
+- 
 # 1.5 release notes
 
 ### Plugin is supported for Jenkins version 2.60.3 or higher.

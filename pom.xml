@@ -8,11 +8,11 @@
         <relativePath />
     </parent>
     <artifactId>google-chat-notification</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.5</version>
     <packaging>hpi</packaging>
     <properties>
-        <jenkins.version>2.60.3</jenkins.version>
-        <java.version>1.8</java.version>
+        <jenkins.version>2.387.1</jenkins.version>
+        <java.version>11</java.version>
     </properties>
     <name>Google Chat Notification</name>
     <description>Google Chat Notification for build status</description>
@@ -35,6 +35,11 @@
             <id>cnaik</id>
             <name>Chirag Naik</name>
             <email>chirag.naik.ec@gmail.com</email>
+        </developer>
+        <developer>
+            <id>regazzoj</id>
+            <name>Jean-Baptiste Regazzoni</name>
+            <email>regazzoj@pm.me</email>
         </developer>
     </developers>
 
@@ -71,11 +76,6 @@
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>plain-credentials</artifactId>
             <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.3.2</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>

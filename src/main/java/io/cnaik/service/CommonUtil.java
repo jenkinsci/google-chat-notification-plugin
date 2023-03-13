@@ -1,14 +1,11 @@
 package io.cnaik.service;
 
-import hudson.ProxyConfiguration;
 import hudson.model.Result;
 import hudson.model.Run;
 import io.cnaik.GoogleChatNotification;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
-import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -173,7 +170,7 @@ public class CommonUtil {
 
                 var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                if (response.statusCode() != HttpStatus.SC_OK) {
+                if (response.statusCode() != 200) {
                     var body = response.body();
 
                     if (logUtil.printLogEnabled()) {

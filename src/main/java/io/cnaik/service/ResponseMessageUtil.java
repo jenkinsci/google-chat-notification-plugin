@@ -26,31 +26,11 @@ public class ResponseMessageUtil {
     }
 
     public String createTextMessage() {
-        String text = escapeSpecialCharacter(replaceJenkinsKeywords(googleChatNotification.getMessage()));
-        return text;
+        return escapeSpecialCharacter(replaceJenkinsKeywords(googleChatNotification.getMessage()));
     }
 
     public String createCardMessage() {
-
-        String json = replaceJenkinsKeywords(replaceBuildStatusKeywordWithColorCode(googleChatNotification.getMessage()));
-        
-        return json;
-
-        /*TextParagraph textParagraph = createTextParagraph(text);
-
-        Widgets[] widgets = createWidgets(1);
-        widgets = addNewWidget(widgets, 0, textParagraph);
-
-        Sections[] sections = createSections(1);
-        sections = addNewSection(sections, 0, widgets);
-
-        Cards[] cards = createCards(1);
-        Header header = new Header("", "", "");
-        cards = addNewCard(cards, 0, sections, header);
-
-        Response response = new Response(cards);
-
-        return new JSONObject(response).toString();*/
+        return replaceJenkinsKeywords(replaceBuildStatusKeywordWithColorCode(googleChatNotification.getMessage()));
     }
 
     private String escapeSpecialCharacter(String input) {

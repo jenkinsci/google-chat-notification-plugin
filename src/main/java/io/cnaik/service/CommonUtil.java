@@ -1,10 +1,8 @@
 package io.cnaik.service;
 
-import hudson.FilePath;
 import hudson.ProxyConfiguration;
 import hudson.model.Result;
 import hudson.model.Run;
-import hudson.model.TaskListener;
 import io.cnaik.GoogleChatNotification;
 import jenkins.model.Jenkins;
 import org.apache.commons.httpclient.util.URIUtil;
@@ -32,8 +30,6 @@ import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 public class CommonUtil {
 
     private GoogleChatNotification googleChatNotification;
-    private TaskListener taskListener;
-    private FilePath ws;
     private Run build;
     private LogUtil logUtil;
     private ResponseMessageUtil responseMessageUtil;
@@ -42,8 +38,6 @@ public class CommonUtil {
 
     public CommonUtil(GoogleChatNotification googleChatNotification) {
         this.googleChatNotification = googleChatNotification;
-        this.taskListener = googleChatNotification.getTaskListener();
-        this.ws = googleChatNotification.getWs();
         this.build = googleChatNotification.getBuild();
         this.logUtil = googleChatNotification.getLogUtil();
         this.responseMessageUtil = googleChatNotification.getResponseMessageUtil();
@@ -180,10 +174,9 @@ public class CommonUtil {
 
         if (checkIfValidURL(urlDetail)) {
             try {
-
-                if(googleChatNotification.isSameThreadNotification()) {
-                    String jobName = TokenMacro.expandAll(build, ws, taskListener, "${JOB_NAME}", false, null);
-                    urlDetail = urlDetail + "&threadKey=" + URIUtil.encodePath(jobName);
+                String threadKey = googleChatNotification.getThreadKey();
+                if(threadKey != null && threadKey.length() > 0) {
+                    urlDetail = urlDetail + "&threadKey=" + URIUtil.encodePath(threadKey);
                 }
 
                 HttpPost post = new HttpPost(urlDetail);

@@ -17,6 +17,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -180,9 +181,9 @@ public class CommonUtil {
                 }
 
                 HttpPost post = new HttpPost(urlDetail);
-                StringEntity stringEntity = new StringEntity(json);
+                StringEntity stringEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
                 post.setEntity(stringEntity);
-                post.setHeader("Content-type", "application/json");
+                post.setHeader("Content-type", ContentType.APPLICATION_JSON.toString());
 
                 post.setConfig(getTimeoutConfig());
 

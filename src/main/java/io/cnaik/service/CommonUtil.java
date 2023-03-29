@@ -3,9 +3,10 @@ package io.cnaik.service;
 import hudson.model.Result;
 import hudson.model.Run;
 import io.cnaik.GoogleChatNotification;
-import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
+
+import org.springframework.web.util.UriUtils;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -157,7 +158,7 @@ public class CommonUtil {
             try {
                 String threadKey = googleChatNotification.getThreadKey();
                 if(threadKey != null && threadKey.length() > 0) {
-                    urlDetail = urlDetail + "&threadKey=" + URIUtil.encodePath(threadKey);
+                    urlDetail = urlDetail + "&threadKey=" + UriUtils.encodePath(threadKey, "UTF-8");
                 }
 
                 var client = HttpClient.newHttpClient();

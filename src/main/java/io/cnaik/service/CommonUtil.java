@@ -1,5 +1,10 @@
 package io.cnaik.service;
 
+import hudson.ProxyConfiguration;
+import hudson.model.Result;
+import hudson.model.Run;
+import io.cnaik.GoogleChatNotification;
+import jenkins.model.Jenkins;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -12,6 +17,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -33,8 +39,6 @@ import jenkins.model.Jenkins;
 public class CommonUtil {
 
     private GoogleChatNotification googleChatNotification;
-    private TaskListener taskListener;
-    private FilePath ws;
     private Run build;
     private LogUtil logUtil;
     private ResponseMessageUtil responseMessageUtil;
@@ -43,8 +47,6 @@ public class CommonUtil {
 
     public CommonUtil(GoogleChatNotification googleChatNotification) {
         this.googleChatNotification = googleChatNotification;
-        this.taskListener = googleChatNotification.getTaskListener();
-        this.ws = googleChatNotification.getWs();
         this.build = googleChatNotification.getBuild();
         this.logUtil = googleChatNotification.getLogUtil();
         this.responseMessageUtil = googleChatNotification.getResponseMessageUtil();
@@ -181,16 +183,15 @@ public class CommonUtil {
 
         if (checkIfValidURL(urlDetail)) {
             try {
-
-                if(googleChatNotification.isSameThreadNotification()) {
-                    String jobName = TokenMacro.expandAll(build, ws, taskListener, "${JOB_NAME}", false, null);
-                    urlDetail = urlDetail + "&threadKey=" + URIUtil.encodePath(jobName);
+                String threadKey = googleChatNotification.getThreadKey();
+                if(threadKey != null && threadKey.length() > 0) {
+                    urlDetail = urlDetail + "&threadKey=" + URIUtil.encodePath(threadKey);
                 }
 
                 HttpPost post = new HttpPost(urlDetail);
-                StringEntity stringEntity = new StringEntity(json);
+                StringEntity stringEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
                 post.setEntity(stringEntity);
-                post.setHeader("Content-type", "application/json");
+                post.setHeader("Content-type", ContentType.APPLICATION_JSON.toString());
 
                 post.setConfig(getTimeoutConfig());
 

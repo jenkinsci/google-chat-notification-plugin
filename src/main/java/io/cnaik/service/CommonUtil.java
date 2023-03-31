@@ -28,6 +28,14 @@ import org.apache.http.util.EntityUtils;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 
+import hudson.FilePath;
+import hudson.ProxyConfiguration;
+import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import io.cnaik.GoogleChatNotification;
+import jenkins.model.Jenkins;
+
 public class CommonUtil {
 
     private GoogleChatNotification googleChatNotification;
@@ -58,7 +66,7 @@ public class CommonUtil {
 
         String json = "";
 
-        if(false) {
+        if(googleChatNotification.isCardMessageFormat()) {
             json = responseMessageUtil.createCardMessage();
         } else {
             json = "{ \"text\": \"" + responseMessageUtil.createTextMessage() + "\"}";

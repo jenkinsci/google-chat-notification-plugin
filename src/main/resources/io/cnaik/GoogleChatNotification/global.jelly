@@ -16,7 +16,11 @@
         </f:entry>
 
         <f:entry title="Message" field="message">
-            <f:textbox />
+            <f:textarea />
+        </f:entry>
+        
+        <f:entry title="Message Format" field="messageFormat">
+            <f:select />
         </f:entry>
 
         <f:entry title="Notify Aborted" field="notifyAborted">

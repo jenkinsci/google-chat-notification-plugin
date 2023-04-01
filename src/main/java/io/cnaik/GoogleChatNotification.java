@@ -1,33 +1,44 @@
 package io.cnaik;
 
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.*;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Notifier;
-import hudson.tasks.Publisher;
-import hudson.util.FormValidation;
-import io.cnaik.service.CommonUtil;
-import io.cnaik.service.LogUtil;
-import io.cnaik.service.ResponseMessageUtil;
-import jenkins.tasks.SimpleBuildStep;
-import net.sf.json.JSONObject;
+import javax.annotation.Nonnull;
+
 import org.jenkinsci.Symbol;
+import org.json.JSONException;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
-import javax.annotation.Nonnull;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.BuildListener;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Notifier;
+import hudson.tasks.Publisher;
+import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
+import io.cnaik.service.CommonUtil;
+import io.cnaik.service.LogUtil;
+import io.cnaik.service.ResponseMessageUtil;
+import jenkins.tasks.SimpleBuildStep;
+import net.sf.json.JSONObject;
 
 public class GoogleChatNotification extends Notifier implements SimpleBuildStep {
 
     private static final long serialVersionUID = 1L;
+    
+    private static final String MESSAGE_FORMAT_SIMPLE = "simple";
+    private static final String MESSAGE_FORMAT_CARD = "card";
 
     private String url;
     private String message;
+    private String messageFormat;
     private String threadKey;
     private boolean notifyAborted;
     private boolean notifyFailure;
@@ -47,6 +58,11 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     public GoogleChatNotification(String url, String message) {
         this.url = url;
         this.message = message;
+    }
+    
+    @DataBoundSetter
+    public void setMessageFormat(String messageFormat) {
+        this.messageFormat = messageFormat;
     }
 
 
@@ -104,6 +120,22 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         } else {
             return message;
         }
+    }
+    
+    public String getMessageFormat() {
+        if(messageFormat == null || messageFormat.equals("")) {
+            return getDescriptor().getMessageFormat();
+        } else {
+            return messageFormat;
+        }
+    }
+    
+    public boolean isSimpleMessageFormat() {
+        return MESSAGE_FORMAT_SIMPLE.equals(getMessageFormat());
+    }
+    
+    public boolean isCardMessageFormat() {
+        return MESSAGE_FORMAT_CARD.equals(getMessageFormat());
     }
 
 
@@ -215,9 +247,12 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     @Symbol("googlechatnotification")
     @Extension
     public static class Descriptor extends BuildStepDescriptor<Publisher> {
+        
+        public static final String defaultMessageFormat = MESSAGE_FORMAT_SIMPLE;
 
         private String url;
         private String message;
+        private String messageFormat;
         private String threadKey;
         private boolean notifyAborted;
         private boolean notifyFailure;
@@ -238,11 +273,22 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
             return FormValidation.ok();
         }
 
-        public FormValidation doCheckMessage(@QueryParameter String value) {
+        public FormValidation doCheckMessage(@QueryParameter String value, @QueryParameter String messageFormat) {
             if(value.length() == 0) {
                 return FormValidation.error("Please add message");
+            } else if (MESSAGE_FORMAT_CARD.equals(messageFormat) && !isJSONValid(value)) {
+                return FormValidation.error("Please provide a valid JSON");
             }
             return FormValidation.ok();
+        }
+        
+        private boolean isJSONValid(String test) {
+            try {
+                new org.json.JSONObject(test);
+            } catch (JSONException ex) {
+                return false;
+            }
+            return true;
         }
 
         @Override
@@ -254,12 +300,22 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         public String getDisplayName() {
             return "Google Chat Notification";
         }
+        
+        public ListBoxModel doFillMessageFormatItems() {
+            ListBoxModel items = new ListBoxModel();
+
+            items.add("Simple text", MESSAGE_FORMAT_SIMPLE);
+            items.add("Card", MESSAGE_FORMAT_CARD);
+
+            return items;
+        }
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             // set that to properties and call save().
             url = formData.getString("url");
             message = formData.getString("message");
+            messageFormat = formData.getString("messageFormat");
             threadKey = formData.getString("threadKey");
             notifyAborted = formData.getBoolean("notifyAborted");
             notifyFailure = formData.getBoolean("notifyFailure");
@@ -280,6 +336,10 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
         public String getMessage() {
             return message;
+        }
+        
+        public String getMessageFormat() {
+            return messageFormat != null ? messageFormat : defaultMessageFormat;
         }
 
         public String getThreadKey() {
@@ -331,7 +391,8 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         return "GoogleChatNotification{" +
                 "url='" + url + '\'' +
                 ", message='" + message + '\'' +
-                ", message='" + threadKey + '\'' +
+                ", messageFormat=" + messageFormat +
+                ", threadKey='" + threadKey + '\'' +
                 ", notifyAborted=" + notifyAborted +
                 ", notifyFailure=" + notifyFailure +
                 ", notifyNotBuilt=" + notifyNotBuilt +

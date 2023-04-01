@@ -14,6 +14,14 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import hudson.FilePath;
+import hudson.ProxyConfiguration;
+import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import io.cnaik.GoogleChatNotification;
+import jenkins.model.Jenkins;
+
 public class CommonUtil {
 
     private final GoogleChatNotification googleChatNotification;
@@ -44,7 +52,11 @@ public class CommonUtil {
 
         String json;
 
-        json = "{ \"text\": \"" + responseMessageUtil.createTextMessage() + "\"}";
+        if(googleChatNotification.isCardMessageFormat()) {
+            json = responseMessageUtil.createCardMessage();
+        } else {
+            json = "{ \"text\": \"" + responseMessageUtil.createTextMessage() + "\"}";
+        }
 
         if (logUtil.printLogEnabled()) {
             logUtil.printLog("Final formatted text: " + json);

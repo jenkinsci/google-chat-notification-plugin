@@ -31,7 +31,7 @@ This plugin is supported for Jenkins version **2.387.1 or higher**.
 ## How to use it in pipeline script
 
 Use below command
-### googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent', notifyAborted: 'true', notifyFailure: 'true', notifyNotBuilt: 'true', notifySuccess: 'true', notifyUnstable: 'true', notifyBackToNormal: 'true', suppressInfoLoggers: 'true', sameThreadNotification: 'true'
+### googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent', messageFormat: 'simple|card', notifyAborted: 'true', notifyFailure: 'true', notifyNotBuilt: 'true', notifySuccess: 'true', notifyUnstable: 'true', notifyBackToNormal: 'true', suppressInfoLoggers: 'true', sameThreadNotification: 'true'
 
 
 ## Please find explanations for each fields as below, usage for all fields remains same for build job and pipeline:
@@ -54,6 +54,11 @@ Use below command
    - This is a mandatory String parameter.
    - Notification message to be sent.
    - Supports all token macro variables for pipeline as well as build jobs.
+
+3. **messageFormat**
+   - This is an optional String parameter.
+   - The format of the message sent. Default value is `simple`.
+   - If `card` is provided as value, the parameter `message` must be a [valid JSON configuration](https://developers.google.com/chat/reference/message-formats/cards) for card message.
 
 3. **notifyAborted**
    - This is an optional boolean parameter. Default value is false.

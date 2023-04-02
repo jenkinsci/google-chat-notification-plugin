@@ -1,10 +1,7 @@
 package io.cnaik.service;
 
-import hudson.ProxyConfiguration;
-import hudson.model.Result;
-import hudson.model.Run;
-import io.cnaik.GoogleChatNotification;
-import jenkins.model.Jenkins;
+import java.io.IOException;
+
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -26,6 +23,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.util.EntityUtils;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
+import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 
 import hudson.FilePath;
@@ -39,6 +37,8 @@ import jenkins.model.Jenkins;
 public class CommonUtil {
 
     private GoogleChatNotification googleChatNotification;
+    private TaskListener taskListener;
+    private FilePath ws;
     private Run build;
     private LogUtil logUtil;
     private ResponseMessageUtil responseMessageUtil;
@@ -47,6 +47,8 @@ public class CommonUtil {
 
     public CommonUtil(GoogleChatNotification googleChatNotification) {
         this.googleChatNotification = googleChatNotification;
+        this.taskListener = googleChatNotification.getTaskListener();
+        this.ws = googleChatNotification.getWs();
         this.build = googleChatNotification.getBuild();
         this.logUtil = googleChatNotification.getLogUtil();
         this.responseMessageUtil = googleChatNotification.getResponseMessageUtil();
@@ -60,13 +62,13 @@ public class CommonUtil {
             logUtil.printLog("Send Google Chat Notification condition is : " + sendNotificationFlag);
         }
 
-        if(!sendNotificationFlag) {
+        if (!sendNotificationFlag) {
             return;
         }
 
         String json = "";
 
-        if(googleChatNotification.isCardMessageFormat()) {
+        if (googleChatNotification.isCardMessageFormat()) {
             json = responseMessageUtil.createCardMessage();
         } else {
             json = "{ \"text\": \"" + responseMessageUtil.createTextMessage() + "\"}";
@@ -85,7 +87,7 @@ public class CommonUtil {
         boolean response;
         String[] url;
 
-        for(String urlDetail: urlDetails) {
+        for (String urlDetail : urlDetails) {
 
             response = call(urlDetail, json);
 
@@ -114,43 +116,43 @@ public class CommonUtil {
 
         boolean result = false;
 
-        if(build == null || build.getResult() == null || googleChatNotification == null) {
+        if (build == null || build.getResult() == null || googleChatNotification == null) {
             return result;
         }
 
         Run prevRun = build.getPreviousBuild();
         Result previousResult = (prevRun != null) ? prevRun.getResult() : Result.SUCCESS;
 
-        if(googleChatNotification.isNotifyAborted()
+        if (googleChatNotification.isNotifyAborted()
                 && Result.ABORTED == build.getResult()) {
 
             result = true;
 
-        } else if(googleChatNotification.isNotifyFailure()
+        } else if (googleChatNotification.isNotifyFailure()
                 && Result.FAILURE == build.getResult()) {
 
             result = true;
 
-        } else if(googleChatNotification.isNotifyNotBuilt()
+        } else if (googleChatNotification.isNotifyNotBuilt()
                 && Result.NOT_BUILT == build.getResult()) {
 
             result = true;
 
-        } else if(googleChatNotification.isNotifySuccess()
+        } else if (googleChatNotification.isNotifySuccess()
                 && Result.SUCCESS == build.getResult()) {
 
             result = true;
 
-        } else if(googleChatNotification.isNotifyUnstable()
+        } else if (googleChatNotification.isNotifyUnstable()
                 && Result.UNSTABLE == build.getResult()) {
 
             result = true;
 
-        } else if(googleChatNotification.isNotifyBackToNormal() && Result.SUCCESS == build.getResult()
-                && (   Result.ABORTED == previousResult
-                || Result.FAILURE == previousResult
-                || Result.UNSTABLE == previousResult
-                || Result.NOT_BUILT == previousResult) ) {
+        } else if (googleChatNotification.isNotifyBackToNormal() && Result.SUCCESS == build.getResult()
+                && (Result.ABORTED == previousResult
+                        || Result.FAILURE == previousResult
+                        || Result.UNSTABLE == previousResult
+                        || Result.NOT_BUILT == previousResult)) {
 
             result = true;
 
@@ -161,7 +163,7 @@ public class CommonUtil {
 
     private boolean checkPipelineFlag() {
 
-        if(googleChatNotification != null &&
+        if (googleChatNotification != null &&
                 !googleChatNotification.isNotifyAborted() &&
                 !googleChatNotification.isNotifyBackToNormal() &&
                 !googleChatNotification.isNotifyFailure() &&
@@ -183,9 +185,14 @@ public class CommonUtil {
 
         if (checkIfValidURL(urlDetail)) {
             try {
-                String threadKey = googleChatNotification.getThreadKey();
-                if(threadKey != null && threadKey.length() > 0) {
+                String threadKey;
+                if (googleChatNotification.isSameThreadNotification()) {
+                    threadKey = StringUtils.defaultIfBlank(googleChatNotification.getThreadKey(), getJobName());
                     urlDetail = urlDetail + "&threadKey=" + URIUtil.encodePath(threadKey);
+
+                    if (logUtil.printLogEnabled()) {
+                        logUtil.printLog("Will send message to the thread: " + threadKey);
+                    }
                 }
 
                 HttpPost post = new HttpPost(urlDetail);
@@ -199,11 +206,11 @@ public class CommonUtil {
                 CloseableHttpResponse response = client.execute(post);
 
                 int responseCode = response.getStatusLine().getStatusCode();
-                if(responseCode != HttpStatus.SC_OK) {
+                if (responseCode != HttpStatus.SC_OK) {
                     HttpEntity entity = response.getEntity();
                     String responseString = EntityUtils.toString(entity);
 
-                    if(logUtil.printLogEnabled()) {
+                    if (logUtil.printLogEnabled()) {
                         logUtil.printLog("Google Chat post may have failed. Response: " + responseString + " , Response Code: " + responseCode);
                     }
                 }
@@ -214,6 +221,10 @@ public class CommonUtil {
             return true;
         }
         return false;
+    }
+
+    private String getJobName() throws MacroEvaluationException, IOException, InterruptedException {
+        return TokenMacro.expandAll(build, ws, taskListener, "${JOB_NAME}", false, null);
     }
 
     private CloseableHttpClient getHttpClient() {
@@ -233,7 +244,7 @@ public class CommonUtil {
                 String password = proxy.getPassword();
                 // Consider it to be passed if username specified. Sufficient?
 
-                if(logUtil.printLogEnabled()) {
+                if (logUtil.printLogEnabled()) {
                     logUtil.printLog("Using proxy authentication (user=" + username + "), (host=" + proxy.name + "), (port=" + proxy.port + ")");
                 }
 

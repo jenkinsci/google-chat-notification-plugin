@@ -2,6 +2,7 @@ package io.cnaik;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.Symbol;
 import org.json.JSONException;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -31,14 +32,13 @@ import net.sf.json.JSONObject;
 
 public class GoogleChatNotification extends Notifier implements SimpleBuildStep {
 
-    private static final long serialVersionUID = 1L;
-    
     private static final String MESSAGE_FORMAT_SIMPLE = "simple";
     private static final String MESSAGE_FORMAT_CARD = "card";
 
     private String url;
     private String message;
     private String messageFormat;
+    private boolean sameThreadNotification;
     private String threadKey;
     private boolean notifyAborted;
     private boolean notifyFailure;
@@ -59,12 +59,16 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         this.url = url;
         this.message = message;
     }
-    
+
     @DataBoundSetter
     public void setMessageFormat(String messageFormat) {
         this.messageFormat = messageFormat;
     }
 
+    @DataBoundSetter
+    public void setSameThreadNotification(boolean sameThreadNotification) {
+        this.sameThreadNotification = sameThreadNotification;
+    }
 
     @DataBoundSetter
     public void setThreadKey(String threadKey) {
@@ -107,7 +111,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     }
 
     public String getUrl() {
-        if(url == null || url.equals("")) {
+        if (StringUtils.isBlank(url)) {
             return getDescriptor().getUrl();
         } else {
             return url;
@@ -115,36 +119,39 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     }
 
     public String getMessage() {
-        if(message == null || message.equals("")) {
+        if (StringUtils.isBlank(message)) {
             return getDescriptor().getMessage();
         } else {
             return message;
         }
     }
-    
+
     public String getMessageFormat() {
-        if(messageFormat == null || messageFormat.equals("")) {
+        if (StringUtils.isBlank(messageFormat)) {
             return getDescriptor().getMessageFormat();
         } else {
             return messageFormat;
         }
     }
-    
+
     public boolean isSimpleMessageFormat() {
         return MESSAGE_FORMAT_SIMPLE.equals(getMessageFormat());
     }
-    
+
     public boolean isCardMessageFormat() {
         return MESSAGE_FORMAT_CARD.equals(getMessageFormat());
     }
 
-
     public String getThreadKey() {
-        if(threadKey == null || threadKey.equals("")) {
+        if (StringUtils.isBlank(threadKey)) {
             return getDescriptor().getThreadKey();
         } else {
             return threadKey;
         }
+    }
+
+    public boolean isSameThreadNotification() {
+        return sameThreadNotification;
     }
 
     public boolean isNotifyAborted() {
@@ -236,7 +243,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
     @Override
     public Descriptor getDescriptor() {
-        return (Descriptor)super.getDescriptor();
+        return (Descriptor) super.getDescriptor();
     }
 
     @Override
@@ -247,12 +254,13 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     @Symbol("googlechatnotification")
     @Extension
     public static class Descriptor extends BuildStepDescriptor<Publisher> {
-        
+
         public static final String defaultMessageFormat = MESSAGE_FORMAT_SIMPLE;
 
         private String url;
         private String message;
         private String messageFormat;
+        private boolean sameThreadNotification;
         private String threadKey;
         private boolean notifyAborted;
         private boolean notifyFailure;
@@ -267,21 +275,21 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         }
 
         public FormValidation doCheckUrl(@QueryParameter String value) {
-            if(value.length() == 0) {
+            if (value.length() == 0) {
                 return FormValidation.error("Please add at least one google chat notification URL");
             }
             return FormValidation.ok();
         }
 
         public FormValidation doCheckMessage(@QueryParameter String value, @QueryParameter String messageFormat) {
-            if(value.length() == 0) {
+            if (value.length() == 0) {
                 return FormValidation.error("Please add message");
             } else if (MESSAGE_FORMAT_CARD.equals(messageFormat) && !isJSONValid(value)) {
                 return FormValidation.error("Please provide a valid JSON");
             }
             return FormValidation.ok();
         }
-        
+
         private boolean isJSONValid(String test) {
             try {
                 new org.json.JSONObject(test);
@@ -300,7 +308,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         public String getDisplayName() {
             return "Google Chat Notification";
         }
-        
+
         public ListBoxModel doFillMessageFormatItems() {
             ListBoxModel items = new ListBoxModel();
 
@@ -316,6 +324,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
             url = formData.getString("url");
             message = formData.getString("message");
             messageFormat = formData.getString("messageFormat");
+            sameThreadNotification = formData.getBoolean("sameThreadNotification");
             threadKey = formData.getString("threadKey");
             notifyAborted = formData.getBoolean("notifyAborted");
             notifyFailure = formData.getBoolean("notifyFailure");
@@ -327,7 +336,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
             // ^Can also use req.bindJSON(this, formData);
             save();
-            return super.configure(req,formData);
+            return super.configure(req, formData);
         }
 
         public String getUrl() {
@@ -337,9 +346,13 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         public String getMessage() {
             return message;
         }
-        
+
         public String getMessageFormat() {
             return messageFormat != null ? messageFormat : defaultMessageFormat;
+        }
+
+        public boolean isSameThreadNotification() {
+            return sameThreadNotification;
         }
 
         public String getThreadKey() {
@@ -392,6 +405,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
                 "url='" + url + '\'' +
                 ", message='" + message + '\'' +
                 ", messageFormat=" + messageFormat +
+                ", sameThreadNotification='" + sameThreadNotification + '\'' +
                 ", threadKey='" + threadKey + '\'' +
                 ", notifyAborted=" + notifyAborted +
                 ", notifyFailure=" + notifyFailure +

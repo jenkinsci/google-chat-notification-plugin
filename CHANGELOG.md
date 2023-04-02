@@ -1,18 +1,4 @@
-# 1.6 release notes
-
-### Plugin is supported for Jenkins version 2.387.1 or higher.
-
-Issue:
-
-- Apache HttpClient class replace with Java 11 Http class
-- 
-# 1.5 release notes
-
-### Plugin is supported for Jenkins version 2.60.3 or higher.
-
-New Features:
-
-- Add support for threaded messages with dynamic threadKey
+Moved to https://github.com/jenkinsci/google-chat-notification-plugin/releases starting in 1.5.
 
 # 1.4 release notes
 

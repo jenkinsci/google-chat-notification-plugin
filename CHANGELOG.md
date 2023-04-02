@@ -1,4 +1,4 @@
-Moved to https://github.com/jenkinsci/google-chat-notification-plugin/releases starting in 1.6.
+Moved to https://github.com/jenkinsci/google-chat-notification-plugin/releases starting in 1.5.
 
 # 1.4 release notes
 

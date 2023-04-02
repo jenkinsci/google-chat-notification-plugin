@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>2.33</version>
+        <version>3.12</version>
         <relativePath />
     </parent>
     <artifactId>google-chat-notification</artifactId>
@@ -13,6 +13,7 @@
     <properties>
         <jenkins.version>2.60.3</jenkins.version>
         <java.version>1.8</java.version>
+        <java.level>8</java.level>
     </properties>
     <name>Google Chat Notification</name>
     <description>Google Chat Notification for build status</description>
@@ -36,6 +37,11 @@
             <name>Chirag Naik</name>
             <email>chirag.naik.ec@gmail.com</email>
         </developer>
+        <developer>
+			<id>Ryudo302</id>
+			<name>Thiago Colbert</name>
+			<url>https://github.com/Ryudo302</url>
+		</developer>
     </developers>
 
     <repositories>
@@ -55,7 +61,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>structs</artifactId>
-            <version>1.10</version>
+            <version>1.23</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>

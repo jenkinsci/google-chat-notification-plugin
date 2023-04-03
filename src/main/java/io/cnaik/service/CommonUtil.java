@@ -206,4 +206,8 @@ public class CommonUtil {
         }
         return false;
     }
+    
+    private String getJobName() throws MacroEvaluationException, IOException, InterruptedException {
+        return TokenMacro.expandAll(build, ws, taskListener, "${JOB_NAME}", false, null);
+    }
 }

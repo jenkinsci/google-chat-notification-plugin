@@ -36,6 +36,11 @@
             <name>Chirag Naik</name>
             <email>chirag.naik.ec@gmail.com</email>
         </developer>
+        <developer>
+			<id>Ryudo302</id>
+			<name>Thiago Colbert</name>
+			<url>https://github.com/Ryudo302</url>
+		</developer>
     </developers>
 
     <repositories>

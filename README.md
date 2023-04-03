@@ -50,47 +50,52 @@ Use below command
      - id:credential_id_for_room1, id:credential_id_for_room2<br/>
      - https://chat.googleapis.com/v1/spaces/room_id/messages?key=key_id&token=token_id, id:credential_id_for_room2<br/>
 
-2. **message**
+1. **message**
    - This is a mandatory String parameter.
    - Notification message to be sent.
    - Supports all token macro variables for pipeline as well as build jobs.
 
-3. **messageFormat**
+1. **messageFormat**
    - This is an optional String parameter.
    - The format of the message sent. Default value is `simple`.
    - If `card` is provided as value, the parameter `message` must be a [valid JSON configuration](https://developers.google.com/chat/reference/message-formats/cards) for card message.
+   
+1. **sameThreadNotification**
+   - This is an optional boolean parameter. Default value is false.
+   - This parameter is used to send notification in same thread for a particular job. If false, the default behavior is to create a new thread for each message.
+   
+1. **threadKey**
+   - This is an optional String parameter. Default value is null.
+   - The thread used to send all the generated notification messages for a particular job. If not defined, the default behavior is to use the JOB_NAME as thread_key.
+   - This parameter only applies if *sameThreadNotification* is set to true.
 
-3. **notifyAborted**
+1. **notifyAborted**
    - This is an optional boolean parameter. Default value is false.
    - Notification message to be sent when build status is ABORTED.
 
-4. **notifyFailure**
+1. **notifyFailure**
    - This is an optional boolean parameter. Default value is false.
    - Notification message to be sent when build status is FAILURE.
 
-5. **notifyNotBuilt**
+1. **notifyNotBuilt**
    - This is an optional boolean parameter. Default value is false.
    - Notification message to be sent when build status is NOT_BUILT.
 
-6. **notifySuccess**
+1. **notifySuccess**
    - This is an optional boolean parameter. Default value is false.
    - Notification message to be sent when build status is SUCCESS.
 
-7. **notifyUnstable**
+1. **notifyUnstable**
    - This is an optional boolean parameter. Default value is false.
    - Notification message to be sent when build status is UNSTABLE.
 
-8. **notifyBackToNormal**
+1. **notifyBackToNormal**
    - This is an optional boolean parameter. Default value is false.
    - Notification message to be sent when build status is SUCCESS and previous build status was not SUCCESS.
 
-9. **suppressInfoLoggers**
+1. **suppressInfoLoggers**
    - This is an optional boolean parameter. Default value is false.
    - Suppress all info loggers in Jenkins build.
-
-9. **sameThreadNotification**
-   - This is an optional boolean parameter. Default value is false.
-   - This parameter is used to send notification in same thread for a particular job. Here thread_key is a value of JOB_NAME.
 
 
 ## Default behaviour of plugin is to send notifications for all build status unless overridden with true value for above defined build statuses.

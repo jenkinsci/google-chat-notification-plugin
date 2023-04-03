@@ -1,18 +1,16 @@
 package io.cnaik.service;
 
-import hudson.model.Result;
-import hudson.model.Run;
-import io.cnaik.GoogleChatNotification;
-import org.apache.commons.lang3.StringUtils;
-import org.jenkinsci.plugins.plaincredentials.StringCredentials;
-
-import org.springframework.web.util.UriUtils;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jenkinsci.plugins.plaincredentials.StringCredentials;
+import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
+import org.jenkinsci.plugins.tokenmacro.TokenMacro;
+import org.springframework.web.util.UriUtils;
 
 import hudson.FilePath;
 import hudson.ProxyConfiguration;
@@ -24,15 +22,19 @@ import jenkins.model.Jenkins;
 
 public class CommonUtil {
 
-    private final GoogleChatNotification googleChatNotification;
-    private final Run build;
-    private final LogUtil logUtil;
-    private final ResponseMessageUtil responseMessageUtil;
+    private GoogleChatNotification googleChatNotification;
+    private TaskListener taskListener;
+    private FilePath ws;
+    private Run build;
+    private LogUtil logUtil;
+    private ResponseMessageUtil responseMessageUtil;
 
     private static final long TIME_OUT = 15 * 1000;
 
     public CommonUtil(GoogleChatNotification googleChatNotification) {
         this.googleChatNotification = googleChatNotification;
+        this.taskListener = googleChatNotification.getTaskListener();
+        this.ws = googleChatNotification.getWs();
         this.build = googleChatNotification.getBuild();
         this.logUtil = googleChatNotification.getLogUtil();
         this.responseMessageUtil = googleChatNotification.getResponseMessageUtil();
@@ -52,7 +54,7 @@ public class CommonUtil {
 
         String json;
 
-        if(googleChatNotification.isCardMessageFormat()) {
+        if (googleChatNotification.isCardMessageFormat()) {
             json = responseMessageUtil.createCardMessage();
         } else {
             json = "{ \"text\": \"" + responseMessageUtil.createTextMessage() + "\"}";
@@ -133,9 +135,9 @@ public class CommonUtil {
 
         } else if (googleChatNotification.isNotifyBackToNormal() && Result.SUCCESS == build.getResult()
                 && (Result.ABORTED == previousResult
-                || Result.FAILURE == previousResult
-                || Result.UNSTABLE == previousResult
-                || Result.NOT_BUILT == previousResult)) {
+                        || Result.FAILURE == previousResult
+                        || Result.UNSTABLE == previousResult
+                        || Result.NOT_BUILT == previousResult)) {
 
             result = true;
 
@@ -168,9 +170,14 @@ public class CommonUtil {
 
         if (checkIfValidURL(urlDetail)) {
             try {
-                String threadKey = googleChatNotification.getThreadKey();
-                if(threadKey != null && threadKey.length() > 0) {
-                    urlDetail = urlDetail + "&threadKey=" + UriUtils.encodePath(threadKey, "UTF-8");
+                String threadKey;
+                if (googleChatNotification.isSameThreadNotification()) {
+                    threadKey = StringUtils.defaultIfBlank(googleChatNotification.getThreadKey(), getJobName());
+                    urlDetail = urlDetail + "&threadKey=" + URIUtil.encodePath(threadKey);
+
+                    if (logUtil.printLogEnabled()) {
+                        logUtil.printLog("Will send message to the thread: " + threadKey);
+                    }
                 }
 
                 var client = HttpClient.newHttpClient();

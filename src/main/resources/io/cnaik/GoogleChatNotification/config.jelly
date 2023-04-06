@@ -20,6 +20,14 @@
     <f:entry title="Message Format" field="messageFormat">
         <f:select />
     </f:entry>
+    
+    <f:entry title="Append Notification In Same Thread" field="sameThreadNotification">
+        <f:checkbox/>
+    </f:entry>
+    
+    <f:entry title="Thread Key" field="threadKey">
+        <f:textbox />
+    </f:entry>
 
     <f:entry title="Notify Aborted" field="notifyAborted">
         <f:checkbox/>
@@ -46,10 +54,6 @@
     </f:entry>
 
     <f:entry title="Suppress Info Logs" field="suppressInfoLoggers">
-        <f:checkbox/>
-    </f:entry>
-
-    <f:entry title="Append Notification In Same Thread" field="sameThreadNotification">
         <f:checkbox/>
     </f:entry>
 

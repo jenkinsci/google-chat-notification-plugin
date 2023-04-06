@@ -2,3 +2,6 @@
 target/
 work/
 google-chat-notification.iml
+.settings/
+.classpath
+.project

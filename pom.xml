@@ -5,15 +5,15 @@
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
         <version>3.12</version>
+        <version>4.55</version>
         <relativePath />
     </parent>
     <artifactId>google-chat-notification</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <properties>
-        <jenkins.version>2.60.3</jenkins.version>
-        <java.version>1.8</java.version>
-        <java.level>8</java.level>
+        <jenkins.version>2.361.1</jenkins.version>
+        <java.version>11</java.version>
     </properties>
     <name>Google Chat Notification</name>
     <description>Google Chat Notification for build status</description>
@@ -38,10 +38,15 @@
             <email>chirag.naik.ec@gmail.com</email>
         </developer>
         <developer>
-			<id>Ryudo302</id>
-			<name>Thiago Colbert</name>
-			<url>https://github.com/Ryudo302</url>
-		</developer>
+            <id>Ryudo302</id>
+            <name>Thiago Colbert</name>
+            <url>https://github.com/Ryudo302</url>
+        </developer>
+        <developer>
+            <id>regazzoj</id>
+            <name>Jean-Baptiste Regazzoni</name>
+            <email>regazzoj@pm.me</email>
+        </developer>
     </developers>
 
     <repositories>
@@ -61,7 +66,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>structs</artifactId>
-            <version>1.23</version>
+            <version>308.v852b473a2b8c</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
@@ -79,14 +84,9 @@
             <version>1.1</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.3.2</version>
-        </dependency>
-        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.8</version>
+            <version>1.15</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -98,7 +98,6 @@
             <artifactId>json</artifactId>
             <version>20180813</version>
         </dependency>
-
     </dependencies>
 
     <build>

@@ -1,24 +1,23 @@
 package io.cnaik.service;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
-import org.springframework.web.util.UriUtils;
 
 import hudson.FilePath;
-import hudson.ProxyConfiguration;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import io.cnaik.GoogleChatNotification;
-import jenkins.model.Jenkins;
 
 public class CommonUtil {
 

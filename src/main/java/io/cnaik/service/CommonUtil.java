@@ -7,11 +7,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
+import org.springframework.web.util.UriUtils;
 
 import hudson.FilePath;
 import hudson.model.Result;
@@ -172,7 +172,7 @@ public class CommonUtil {
                 String threadKey;
                 if (googleChatNotification.isSameThreadNotification()) {
                     threadKey = StringUtils.defaultIfBlank(googleChatNotification.getThreadKey(), getJobName());
-                    urlDetail = urlDetail + "&threadKey=" + URIUtil.encodePath(threadKey);
+                    urlDetail = urlDetail + "&threadKey=" + UriUtils.encodePath(threadKey, "UTF-8");
 
                     if (logUtil.printLogEnabled()) {
                         logUtil.printLog("Will send message to the thread: " + threadKey);

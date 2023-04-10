@@ -198,7 +198,7 @@ public class CommonUtil {
                     }
                 }
 
-            } catch (Exception e) {
+            } catch (InterruptedException | IOException | MacroEvaluationException e) {
                 logUtil.printLog("Exception while posting Google Chat message: " + e.getMessage());
             }
             return true;

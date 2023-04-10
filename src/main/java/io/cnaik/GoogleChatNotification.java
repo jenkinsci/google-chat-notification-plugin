@@ -10,6 +10,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -270,6 +271,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         private boolean notifyBackToNormal;
         private boolean suppressInfoLoggers;
 
+        @SuppressFBWarnings(value = "MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR", justification = "The Descriptor#load documentation states that \"The constructor of the derived class must call this method\".")
         public Descriptor() {
             load();
         }

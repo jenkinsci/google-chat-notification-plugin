@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 public class TextParagraph implements Serializable {
 
+    private static final long serialVersionUID = -309638084164843267L;
+    
     private String text;
 
     public TextParagraph(String text) {

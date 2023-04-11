@@ -10,9 +10,11 @@ Google Chat Notification Jenkins Plugin to send build status to [Google Chat][go
 This Jenkins plugin allows you to send Google Chat notification as a post build action or as a pipeline script.
 This plugin is supported for Jenkins version **2.361.1 or higher**.
 
+![Screenshot][img-output-sample]
+
 ## Prerequisites
 
-- You must create a web hook in google chat group to send notification.
+- You must [create a web hook in google][google-chat-create-webhook] chat group to send notification.
 
 ![Screenshot][img-configure-web-hook]
 
@@ -28,7 +30,7 @@ This plugin is supported for Jenkins version **2.361.1 or higher**.
 
 - Configure URL (web hook URL configured in prerequisites), message (build message) and type of build result you want to send notification. You can configure multiple URLs separated by comma.
 
-![Screenshot](docs/details.png)
+![Screenshot][img-post-build-action-google-chat-config]
 
 ## How to use it in pipeline script
 
@@ -42,7 +44,7 @@ Use below command
    - Single/multiple comma separated HTTP URLs or/and single/multiple comma separated Credential IDs.
      - To use Credential ID as URL identifier configure entire URL as secret in credential. Use *id:credential_id_for_room1* as value in URL.
 
-     ![Screenshot](docs/add-credential.png)
+     ![Screenshot][img-add-credential]
 
    - Different Sample Ways to define URL parameter:
      - https://chat.googleapis.com/v1/spaces/room_id/messages?key=key_id&token=token_id<br/>
@@ -120,8 +122,16 @@ Please report issues and enhancements through the [Jenkins issue tracker](https:
 
 [google-chat]: https://chat.google.com
 
+[google-chat-create-webhook]: https://developers.google.com/chat/how-tos/webhooks?hl=pt-br#step_1_register_the_incoming_webhook
+
 [img-configure-web-hook]: docs/configure-web-hook.png
 
 [img-add-post-build-action]: docs/add-post-build-action.png
 
 [img-post-build-action-google-chat]: docs/click-google-chat-notification.png
+
+[img-post-build-action-google-chat-config]: docs/details.png
+
+[img-add-credential]: docs/add-credential.png
+
+[img-output-sample]: docs/output-sample.png

@@ -98,4 +98,8 @@ Use below command
    - Suppress all info loggers in Jenkins build.
 
 
-## Default behaviour of plugin is to send notifications for all build status unless overridden with true value for above defined build statuses.
+### Default behaviour of plugin is to send notifications for all build status unless overridden with true value for above defined build statuses.
+
+## Report an Issue
+
+Please report issues and enhancements through the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#24023).

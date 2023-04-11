@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public final class Header implements Serializable {
 
+    private static final long serialVersionUID = 2736041656260337631L;
+    
     private final String title;
     private final String subtitle;
     private final String imageUrl;

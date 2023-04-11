@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 public final class Cards implements Serializable {
 
+    private static final long serialVersionUID = -1653005285015984998L;
+    
     private final Sections[] sections;
     private final Header header;
 

@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 public class Widgets implements Serializable {
 
+    private static final long serialVersionUID = 7793136321179413465L;
+    
     private TextParagraph textParagraph;
 
     public Widgets(TextParagraph textParagraph) {

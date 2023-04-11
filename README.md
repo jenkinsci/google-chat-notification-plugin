@@ -1,38 +1,41 @@
-# google-chat-notification-jenkins-plugin
+# Google Chat plugin for Jenkins
 
-Google Chat Notification Jenkins Plugin to send build status to [Google Chat](https://chat.google.com)
+[![Build Status][jenkins-status]][jenkins-builds]
+[![Jenkins Plugin][plugin-version-badge]][plugin]
+[![GitHub release][github-release-badge]][github-release]
+[![Jenkins Plugin Installs][plugin-install-badge]][plugin]
+
+Google Chat Notification Jenkins Plugin to send build status to [Google Chat][google-chat].
 
 This Jenkins plugin allows you to send Google Chat notification as a post build action or as a pipeline script.
 This plugin is supported for Jenkins version **2.361.1 or higher**.
 
+![Screenshot][img-output-sample]
 
 ## Prerequisites
 
-- You must create a web hook in google chat group to send notification.
+- You must [create a web hook in google][google-chat-create-webhook] chat group to send notification.
 
-![Screenshot](docs/configure-web-hook.png)
-
+![Screenshot][img-configure-web-hook]
 
 ## How to configure it in post build action
 
 - Click on Add post-build action button
 
-![Screenshot](docs/add-post-build-action.png)
+![Screenshot][img-add-post-build-action]
 
 - Click on Google Chat Notification
 
-![Screenshot](docs/click-google-chat-notification.png)
+![Screenshot][img-post-build-action-google-chat]
 
 - Configure URL (web hook URL configured in prerequisites), message (build message) and type of build result you want to send notification. You can configure multiple URLs separated by comma.
 
-![Screenshot](docs/details.png)
-
+![Screenshot][img-post-build-action-google-chat-config]
 
 ## How to use it in pipeline script
 
 Use below command
-### googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent', messageFormat: 'simple|card', notifyAborted: 'true', notifyFailure: 'true', notifyNotBuilt: 'true', notifySuccess: 'true', notifyUnstable: 'true', notifyBackToNormal: 'true', suppressInfoLoggers: 'true', sameThreadNotification: 'true'
-
+### googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent', messageFormat: 'simple|card', sameThreadNotification: 'true', threadKey: '', notifyAborted: 'true', notifyFailure: 'true', notifyNotBuilt: 'true', notifySuccess: 'true', notifyUnstable: 'true', notifyBackToNormal: 'true', suppressInfoLoggers: 'true'
 
 ## Please find explanations for each fields as below, usage for all fields remains same for build job and pipeline:
 
@@ -41,7 +44,7 @@ Use below command
    - Single/multiple comma separated HTTP URLs or/and single/multiple comma separated Credential IDs.
      - To use Credential ID as URL identifier configure entire URL as secret in credential. Use *id:credential_id_for_room1* as value in URL.
 
-     ![Screenshot](docs/add-credential.png)
+     ![Screenshot][img-add-credential]
 
    - Different Sample Ways to define URL parameter:
      - https://chat.googleapis.com/v1/spaces/room_id/messages?key=key_id&token=token_id<br/>
@@ -97,9 +100,38 @@ Use below command
    - This is an optional boolean parameter. Default value is false.
    - Suppress all info loggers in Jenkins build.
 
-
 ### Default behaviour of plugin is to send notifications for all build status unless overridden with true value for above defined build statuses.
 
 ## Report an Issue
 
 Please report issues and enhancements through the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#24023).
+
+[jenkins-builds]: https://ci.jenkins.io/job/Plugins/job/google-chat-notification-plugin/job/master/
+
+[jenkins-status]: https://ci.jenkins.io/buildStatus/icon?job=Plugins/google-chat-notification-plugin/master
+
+[plugin-version-badge]: https://img.shields.io/jenkins/plugin/v/google-chat-notification.svg
+
+[plugin-install-badge]: https://img.shields.io/jenkins/plugin/i/google-chat-notification.svg?color=blue
+
+[plugin]: https://plugins.jenkins.io/google-chat-notification
+
+[github-release-badge]: https://img.shields.io/github/release/jenkinsci/google-chat-notification-plugin.svg?label=release
+
+[github-release]: https://github.com/jenkinsci/google-chat-notification-plugin/releases/latest
+
+[google-chat]: https://chat.google.com
+
+[google-chat-create-webhook]: https://developers.google.com/chat/how-tos/webhooks?hl=pt-br#step_1_register_the_incoming_webhook
+
+[img-configure-web-hook]: docs/configure-web-hook.png
+
+[img-add-post-build-action]: docs/add-post-build-action.png
+
+[img-post-build-action-google-chat]: docs/click-google-chat-notification.png
+
+[img-post-build-action-google-chat-config]: docs/details.png
+
+[img-add-credential]: docs/add-credential.png
+
+[img-output-sample]: docs/output-sample.png

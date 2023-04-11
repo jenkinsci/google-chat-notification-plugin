@@ -5,7 +5,7 @@
 [![GitHub release][github-release-badge]][github-release]
 [![Jenkins Plugin Installs][plugin-install-badge]][plugin]
 
-Google Chat Notification Jenkins Plugin to send build status to [Google Chat](https://chat.google.com)
+Google Chat Notification Jenkins Plugin to send build status to [Google Chat][google-chat].
 
 This Jenkins plugin allows you to send Google Chat notification as a post build action or as a pipeline script.
 This plugin is supported for Jenkins version **2.361.1 or higher**.
@@ -14,17 +14,17 @@ This plugin is supported for Jenkins version **2.361.1 or higher**.
 
 - You must create a web hook in google chat group to send notification.
 
-![Screenshot](docs/configure-web-hook.png)
+![Screenshot][img-configure-web-hook]
 
 ## How to configure it in post build action
 
 - Click on Add post-build action button
 
-![Screenshot](docs/add-post-build-action.png)
+![Screenshot][img-add-post-build-action]
 
 - Click on Google Chat Notification
 
-![Screenshot](docs/click-google-chat-notification.png)
+![Screenshot][img-post-build-action-google-chat]
 
 - Configure URL (web hook URL configured in prerequisites), message (build message) and type of build result you want to send notification. You can configure multiple URLs separated by comma.
 
@@ -98,8 +98,11 @@ Use below command
    - This is an optional boolean parameter. Default value is false.
    - Suppress all info loggers in Jenkins build.
 
+### Default behaviour of plugin is to send notifications for all build status unless overridden with true value for above defined build statuses.
 
-## Default behaviour of plugin is to send notifications for all build status unless overridden with true value for above defined build statuses.
+## Report an Issue
+
+Please report issues and enhancements through the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#24023).
 
 [jenkins-builds]: https://ci.jenkins.io/job/Plugins/job/google-chat-notification-plugin/job/master/
 
@@ -115,14 +118,10 @@ Use below command
 
 [github-release]: https://github.com/jenkinsci/google-chat-notification-plugin/releases/latest
 
-[rocketchat]: https://rocket.chat/
+[google-chat]: https://chat.google.com
 
-[mattermost]: https://about.mattermost.com/
+[img-configure-web-hook]: docs/configure-web-hook.png
 
-[img-emoji-reaction]: /docs/emoji-reaction.png
+[img-add-post-build-action]: docs/add-post-build-action.png
 
-[img-secret-text]: https://cloud.githubusercontent.com/assets/983526/17971588/6c26dfa0-6aa9-11e6-808c-3e139446e013.png
-
-[img-token-credential]: /docs/global-config.png
-
-[img-plugin-manager]: /docs/plugin-manager-search.png
+[img-post-build-action-google-chat]: docs/click-google-chat-notification.png

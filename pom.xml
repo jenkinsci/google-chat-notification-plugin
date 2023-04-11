@@ -1,117 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.jenkins-ci.plugins</groupId>
-        <artifactId>plugin</artifactId>
-        <version>4.55</version>
-        <relativePath />
-    </parent>
-    <artifactId>google-chat-notification</artifactId>
-    <version>1.7-SNAPSHOT</version>
-    <packaging>hpi</packaging>
-    <properties>
-        <jenkins.version>2.361.1</jenkins.version>
-        <java.version>11</java.version>
-    </properties>
-    <name>Google Chat Notification</name>
-    <description>Google Chat Notification for build status</description>
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/Google+Chat+Notification+Plugin</url>
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>http://opensource.org/licenses/MIT</url>
-        </license>
-    </licenses>
-    <scm>
-        <connection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-      <tag>HEAD</tag>
-  </scm>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jenkins-ci.plugins</groupId>
+		<artifactId>plugin</artifactId>
+		<version>4.55</version>
+		<relativePath />
+	</parent>
 
-    <developers>
-        <developer>
-            <id>cnaik</id>
-            <name>Chirag Naik</name>
-            <email>chirag.naik.ec@gmail.com</email>
-        </developer>
-        <developer>
-            <id>Ryudo302</id>
-            <name>Thiago Colbert</name>
-            <url>https://github.com/Ryudo302</url>
-        </developer>
-        <developer>
-            <id>regazzoj</id>
-            <name>Jean-Baptiste Regazzoni</name>
-            <email>regazzoj@pm.me</email>
-        </developer>
-    </developers>
+	<artifactId>google-chat-notification</artifactId>
+	<version>${revision}${changelist}</version>
+	<packaging>hpi</packaging>
 
-    <repositories>
-        <repository>
-            <id>repo.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/public/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>repo.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
+	<name>Google Chat Notification</name>
+	<description>Google Chat Notification for build status</description>
+	<url>https://wiki.jenkins-ci.org/display/JENKINS/Google+Chat+Notification+Plugin</url>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>structs</artifactId>
-            <version>308.v852b473a2b8c</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>token-macro</artifactId>
-            <version>2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>credentials</artifactId>
-            <version>2.6.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>plain-credentials</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.15</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20180813</version>
-        </dependency>
-    </dependencies>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://opensource.org/licenses/MIT</url>
+		</license>
+	</licenses>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
+	<developers>
+		<developer>
+			<id>cnaik</id>
+			<name>Chirag Naik</name>
+			<email>chirag.naik.ec@gmail.com</email>
+		</developer>
+		<developer>
+			<id>Ryudo302</id>
+			<name>Thiago Colbert</name>
+			<url>https://github.com/Ryudo302</url>
+		</developer>
+		<developer>
+			<id>regazzoj</id>
+			<name>Jean-Baptiste Regazzoni</name>
+			<email>regazzoj@pm.me</email>
+		</developer>
+	</developers>
 
-        </plugins>
-    </build>
+	<properties>
+		<revision>1.7</revision>
+		<changelist>-SNAPSHOT</changelist>
+		
+		<gitHubRepo>jenkinsci/google-chat-notification-plugin</gitHubRepo>
+		
+		<jenkins.version>2.361.1</jenkins.version>
+		<java.version>11</java.version>
 
+		<spotbugs.effort>Max</spotbugs.effort>
+		<spotbugs.threshold>Low</spotbugs.threshold>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>structs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>token-macro</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>credentials</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>plain-credentials</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20180813</version>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.jenkins.tools.bom</groupId>
+				<artifactId>bom-2.361.x</artifactId>
+				<version>1723.vcb_9fee52c9fc</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>repo.jenkins-ci.org</id>
+			<url>https://repo.jenkins-ci.org/public/</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>repo.jenkins-ci.org</id>
+			<url>https://repo.jenkins-ci.org/public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<scm>
+		<connection>scm:git:https://github.com/${gitHubRepo}.git</connection>
+		<developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
+		<url>https://github.com/${gitHubRepo}</url>
+		<tag>${scmTag}</tag>
+	</scm>
 </project>

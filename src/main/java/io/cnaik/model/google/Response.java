@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 public final class Response implements Serializable {
 
+    private static final long serialVersionUID = 6530464730724275069L;
+    
     private final Cards[] cards;
 
     public Response(Cards[] cards) {

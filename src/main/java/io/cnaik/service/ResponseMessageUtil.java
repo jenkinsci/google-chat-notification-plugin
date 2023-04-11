@@ -5,7 +5,12 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import io.cnaik.GoogleChatNotification;
 import io.cnaik.model.google.*;
+
+import java.io.IOException;
+import java.util.Locale;
+
 import org.apache.commons.lang3.StringUtils;
+import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.json.JSONObject;
 
@@ -56,7 +61,7 @@ public class ResponseMessageUtil {
 
             return TokenMacro.expandAll(build, ws, taskListener, inputString, false, null);
 
-        } catch (Exception e) {
+        } catch (MacroEvaluationException | IOException | InterruptedException e) {
             logUtil.printLog("Exception in Token Macro expansion: " + e);
         }
         return inputString;
@@ -76,13 +81,13 @@ public class ResponseMessageUtil {
                 String buildStatus = TokenMacro.expandAll(build, ws, taskListener, "${BUILD_STATUS}", false, null);
 
                 if(StringUtils.isNotEmpty(buildStatus)
-                        && buildStatus.toUpperCase().contains("FAIL")) {
+                        && buildStatus.toUpperCase(Locale.ENGLISH).contains("FAIL")) {
                     outputString =  outputString.replace("${BUILD_STATUS}", "<font color=\"#ff0000\">${BUILD_STATUS}</font>");
                 } else {
                     outputString =  outputString.replace("${BUILD_STATUS}", "<font color=\"#5DBCD2\">${BUILD_STATUS}</font>");
                 }
 
-            } catch (Exception e) {
+            } catch (MacroEvaluationException | IOException | InterruptedException e) {
                 outputString = inputString;
                 logUtil.printLog("Exception in Token Macro expansion: " + e);
             }

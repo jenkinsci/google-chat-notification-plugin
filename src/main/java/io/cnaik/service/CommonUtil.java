@@ -9,21 +9,14 @@ import java.time.Duration;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
-import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
-import org.jenkinsci.plugins.tokenmacro.TokenMacro;
-import org.springframework.web.util.UriUtils;
 
-import hudson.FilePath;
 import hudson.model.Result;
 import hudson.model.Run;
-import hudson.model.TaskListener;
 import io.cnaik.GoogleChatNotification;
 
 public class CommonUtil {
 
     private GoogleChatNotification googleChatNotification;
-    private TaskListener taskListener;
-    private FilePath ws;
     private Run build;
     private LogUtil logUtil;
     private ResponseMessageUtil responseMessageUtil;
@@ -32,8 +25,6 @@ public class CommonUtil {
 
     public CommonUtil(GoogleChatNotification googleChatNotification) {
         this.googleChatNotification = googleChatNotification;
-        this.taskListener = googleChatNotification.getTaskListener();
-        this.ws = googleChatNotification.getWs();
         this.build = googleChatNotification.getBuild();
         this.logUtil = googleChatNotification.getLogUtil();
         this.responseMessageUtil = googleChatNotification.getResponseMessageUtil();
@@ -56,7 +47,7 @@ public class CommonUtil {
         if (googleChatNotification.isCardMessageFormat()) {
             json = responseMessageUtil.createCardMessage();
         } else {
-            json = "{ \"text\": \"" + responseMessageUtil.createTextMessage() + "\"}";
+            json = responseMessageUtil.createTextMessage();
         }
 
         if (logUtil.printLogEnabled()) {
@@ -169,16 +160,6 @@ public class CommonUtil {
 
         if (checkIfValidURL(urlDetail)) {
             try {
-                String threadKey;
-                if (googleChatNotification.isSameThreadNotification()) {
-                    threadKey = StringUtils.defaultIfBlank(googleChatNotification.getThreadKey(), getJobName());
-                    urlDetail = urlDetail + "&threadKey=" + UriUtils.encodePath(threadKey, "UTF-8");
-
-                    if (logUtil.printLogEnabled()) {
-                        logUtil.printLog("Will send message to the thread: " + threadKey);
-                    }
-                }
-
                 var client = HttpClient.newHttpClient();
 
                 var request = HttpRequest.newBuilder()
@@ -198,15 +179,11 @@ public class CommonUtil {
                     }
                 }
 
-            } catch (InterruptedException | IOException | MacroEvaluationException e) {
+            } catch (InterruptedException | IOException e) {
                 logUtil.printLog("Exception while posting Google Chat message: " + e.getMessage());
             }
             return true;
         }
         return false;
-    }
-    
-    private String getJobName() throws MacroEvaluationException, IOException, InterruptedException {
-        return TokenMacro.expandAll(build, ws, taskListener, "${JOB_NAME}", false, null);
     }
 }

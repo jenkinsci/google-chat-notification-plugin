@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.util.UriUtils;
 
@@ -38,15 +39,7 @@ public class ResponseMessageUtil {
     public String createTextMessage() {
         JSONObject thread = null;
         if (googleChatNotification.isSameThreadNotification()) {
-            thread = new JSONObject();
-
-            var threadKey = StringUtils.defaultIfBlank(googleChatNotification.getThreadKey(), getJobName());
-            threadKey = UriUtils.encodePath(threadKey, "UTF-8");
-            thread.put("threadKey", threadKey);
-
-            if (logUtil.printLogEnabled()) {
-                logUtil.printLog("Will send message to the thread: " + threadKey);
-            }
+            thread = createThreadJson();
         }
 
         var text = escapeSpecialCharacter(replaceJenkinsKeywords(googleChatNotification.getMessage()));
@@ -67,7 +60,38 @@ public class ResponseMessageUtil {
     }
 
     public String createCardMessage() {
-        return replaceJenkinsKeywords(replaceBuildStatusKeywordWithColorCode(googleChatNotification.getMessage()));
+        String message = googleChatNotification.getMessage();
+
+        try {
+            var json = new JSONObject(message);
+
+            if (json.has("thread")) {
+                logUtil.printLog(
+                        "WARN: Since the provided JSON message already contains a 'thread' key, the plugin parameters 'sameThreadNotification' and 'threadKey' will be ignored");
+            } else if (googleChatNotification.isSameThreadNotification()) {
+                var thread = createThreadJson();
+                json.put("thread", thread);
+                message = json.toString();
+            }
+        } catch (JSONException exception) {
+            logUtil.printLog("Exception while trying to process JSON message: " + exception.getMessage());
+        }
+
+        return replaceJenkinsKeywords(replaceBuildStatusKeywordWithColorCode(message));
+    }
+
+    private JSONObject createThreadJson() {
+        var threadKey = StringUtils.defaultIfBlank(googleChatNotification.getThreadKey(), getJobName());
+        threadKey = UriUtils.encodePath(threadKey, "UTF-8");
+
+        var thread = new JSONObject();
+        thread.put("threadKey", threadKey);
+
+        if (logUtil.printLogEnabled()) {
+            logUtil.printLog("Will send message to the thread: " + threadKey);
+        }
+
+        return thread;
     }
 
     private String escapeSpecialCharacter(String input) {

@@ -1,6 +1,6 @@
 package io.cnaik.model.google;
 
-/**
+/*
  * @see https://developers.google.com/chat/api/reference/rest/v1/spaces.messages/create#messagereplyoption
  */
 public enum MessageReplyOption {

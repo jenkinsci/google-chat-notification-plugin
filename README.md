@@ -66,11 +66,13 @@ Use below command
 1. **sameThreadNotification**
    - This is an optional boolean parameter. Default value is false.
    - This parameter is used to send notification in same thread for a particular job. If false, the default behavior is to create a new thread for each message.
+   - If *messageFormat* is set to `card` and the provided JSON contains a 'thread' key, this parameter will be ignored.
    
 1. **threadKey**
    - This is an optional String parameter. Default value is null.
    - The thread used to send all the generated notification messages for a particular job. If not defined, the default behavior is to use the JOB_NAME as thread_key.
    - This parameter only applies if *sameThreadNotification* is set to true.
+   - If *messageFormat* is set to `card` and the provided JSON contains a 'thread' key, this parameter will be ignored.
 
 1. **notifyAborted**
    - This is an optional boolean parameter. Default value is false.

@@ -13,6 +13,7 @@ import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import hudson.model.Result;
 import hudson.model.Run;
 import io.cnaik.GoogleChatNotification;
+import io.cnaik.model.google.MessageReplyOption;
 
 public class CommonUtil {
 
@@ -160,6 +161,14 @@ public class CommonUtil {
 
         if (checkIfValidURL(urlDetail)) {
             try {
+                if (googleChatNotification.isSameThreadNotification()) {
+                    urlDetail = urlDetail + "&messageReplyOption=" + MessageReplyOption.REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD;
+
+                    if (logUtil.printLogEnabled()) {
+                        logUtil.printLog("Will send message to the thread: " + googleChatNotification.getThreadKey());
+                    }
+                }
+
                 var client = HttpClient.newHttpClient();
 
                 var request = HttpRequest.newBuilder()

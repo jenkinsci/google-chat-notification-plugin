@@ -81,7 +81,7 @@ public class ResponseMessageUtil {
     }
 
     private JSONObject createThreadJson() {
-        var threadKey = StringUtils.defaultIfBlank(googleChatNotification.getThreadKey(), getJobName());
+        var threadKey = StringUtils.defaultIfBlank(replaceJenkinsKeywords(googleChatNotification.getThreadKey()), getJobName());
         threadKey = UriUtils.encodePath(threadKey, "UTF-8");
 
         var thread = new JSONObject();

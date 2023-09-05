@@ -3,6 +3,10 @@
 		Thread used to send all the generated notification messages. If it's left blank, the default behavior is to use the <em>JOB_NAME</em> as thread key.
 	</p>
 	<p>
+		Supports all token macro variables for pipeline as well as build jobs.
+	</p>
+	<p>
 		NOTE: This parameter only applies if the <em>Append Notification In Same Thread</em> option is checked.
+		If <em>Message Format</em> is set to <em>card</em> and the provided JSON contains a <em>thread</em> key, this parameter will be ignored.
 	</p>
 </div>

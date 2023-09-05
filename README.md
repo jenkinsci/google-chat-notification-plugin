@@ -70,7 +70,8 @@ Use below command
    
 1. **threadKey**
    - This is an optional String parameter. Default value is null.
-   - The thread used to send all the generated notification messages for a particular job. If not defined, the default behavior is to use the JOB_NAME as thread_key.
+   - The thread used to send all the generated notification messages for a particular job. If not defined, the default behavior is to use the `JOB_NAME` as *threadKey*.
+   - Supports all token macro variables for pipeline as well as build jobs.
    - This parameter only applies if *sameThreadNotification* is set to true.
    - If *messageFormat* is set to `card` and the provided JSON contains a 'thread' key, this parameter will be ignored.
 

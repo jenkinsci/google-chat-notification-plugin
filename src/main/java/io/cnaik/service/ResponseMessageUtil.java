@@ -3,6 +3,7 @@ package io.cnaik.service;
 import java.io.IOException;
 import java.util.Locale;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
@@ -42,7 +43,7 @@ public class ResponseMessageUtil {
             thread = createThreadJson();
         }
 
-        var text = escapeSpecialCharacter(replaceJenkinsKeywords(googleChatNotification.getMessage()));
+        var text = StringEscapeUtils.unescapeJava(replaceJenkinsKeywords(googleChatNotification.getMessage()));
 
         var json = new JSONObject();
         json.put("text", text);
@@ -92,19 +93,6 @@ public class ResponseMessageUtil {
         }
 
         return thread;
-    }
-
-    private String escapeSpecialCharacter(String input) {
-
-        String output = input;
-
-        if (StringUtils.isNotEmpty(output)) {
-            output = output.replace("{", "\\{");
-            output = output.replace("}", "\\}");
-            output = output.replace("'", "\\'");
-        }
-
-        return output;
     }
 
     private String replaceJenkinsKeywords(String inputString) {

@@ -47,7 +47,7 @@
 		
 		<gitHubRepo>jenkinsci/google-chat-notification-plugin</gitHubRepo>
 		
-		<jenkins.version>2.361.1</jenkins.version>
+		<jenkins.version>2.361.4</jenkins.version>
 		<java.version>11</java.version>
 
 		<spotbugs.effort>Max</spotbugs.effort>

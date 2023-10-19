@@ -13,7 +13,7 @@ public class BuildKey {
             return UNKNOWN;
         }
 
-        return "[" + run.getFullDisplayName() + " #" + run.getNumber() + "]";
+        return "[" + run.getFullDisplayName() + "]";
     }
 
     public static String format(AbstractBuild<?, ?> build) {

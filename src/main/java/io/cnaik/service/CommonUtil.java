@@ -1,19 +1,11 @@
 package io.cnaik.service;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
-
-import org.apache.commons.lang3.StringUtils;
-import org.jenkinsci.plugins.plaincredentials.StringCredentials;
-
 import hudson.model.Result;
 import hudson.model.Run;
 import io.cnaik.GoogleChatNotification;
-import io.cnaik.model.google.MessageReplyOption;
+import jenkins.plugins.googlechat.GoogleChatRequest;
+import jenkins.plugins.googlechat.GoogleChatService;
+import jenkins.plugins.googlechat.StandardGoogleChatService;
 
 public class CommonUtil {
 
@@ -21,18 +13,17 @@ public class CommonUtil {
     private Run build;
     private LogUtil logUtil;
     private ResponseMessageUtil responseMessageUtil;
-
-    private static final long TIME_OUT = 15 * 1000;
+    private final GoogleChatService googleChatService;
 
     public CommonUtil(GoogleChatNotification googleChatNotification) {
         this.googleChatNotification = googleChatNotification;
         this.build = googleChatNotification.getBuild();
         this.logUtil = googleChatNotification.getLogUtil();
         this.responseMessageUtil = googleChatNotification.getResponseMessageUtil();
+        this.googleChatService = new StandardGoogleChatService();
     }
 
     public void send() {
-
         boolean sendNotificationFlag = checkPipelineFlag();
 
         logUtil.printLog("Send Google Chat Notification condition is : " + sendNotificationFlag);
@@ -41,46 +32,21 @@ public class CommonUtil {
             return;
         }
 
-        String json;
+        GoogleChatRequest request;
 
         if (googleChatNotification.isCardMessageFormat()) {
-            json = responseMessageUtil.createCardMessage();
+            request = responseMessageUtil.createCardMessage().orElse(null);
         } else {
-            json = responseMessageUtil.createTextMessage();
+            request = responseMessageUtil.createTextMessage();
         }
 
-        logUtil.printLog("Final formatted text: " + json);
-
-        notifyForEachUrl(json);
-    }
-
-    private void notifyForEachUrl(String json) {
+        logUtil.printLog("Final formatted text: " + request.getBody());
 
         String[] urlDetails = googleChatNotification.getUrl().split(",");
-        boolean response;
-        String[] url;
 
-        for (String urlDetail : urlDetails) {
-
-            response = call(urlDetail, json);
-
-            if (!response && StringUtils.isNotEmpty(urlDetail)
-                    && urlDetail.trim().startsWith("id:")) {
-
-                url = urlDetail.trim().split("id:");
-
-                CredentialUtil credentialUtil = new CredentialUtil();
-                StringCredentials stringCredentials = credentialUtil.lookupCredentials(url[1]);
-
-                if (stringCredentials != null) {
-                    stringCredentials.getSecret();
-                    response = call(stringCredentials.getSecret().getPlainText(), json);
-                }
-            }
-
-            if (!response) {
-                logUtil.printLog("Invalid Google Chat Notification URL found: " + urlDetail);
-            }
+        var success = googleChatService.publish(request, urlDetails);
+        if (!success) {
+            logUtil.printLog("Operation may have failed. Please check system log for details.");
         }
     }
 
@@ -145,46 +111,5 @@ public class CommonUtil {
             return true;
         }
         return checkWhetherToSend();
-    }
-
-    private boolean checkIfValidURL(String url) {
-        return (StringUtils.isNotEmpty(url)
-                && (url.trim().contains("https") || url.trim().contains("http"))
-                && url.trim().contains("?"));
-    }
-
-    private boolean call(String urlDetail, String json) {
-
-        if (checkIfValidURL(urlDetail)) {
-            try {
-                if (googleChatNotification.isSameThreadNotification()) {
-                    urlDetail = urlDetail + "&messageReplyOption=" + MessageReplyOption.REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD;
-
-                    logUtil.printLog("Will send message to the thread: " + googleChatNotification.getThreadKey());
-                }
-
-                var client = HttpClient.newHttpClient();
-
-                var request = HttpRequest.newBuilder()
-                        .uri(URI.create(urlDetail))
-                        .POST(HttpRequest.BodyPublishers.ofString(json))
-                        .timeout(Duration.ofSeconds(TIME_OUT))
-                        .build();
-
-                var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                if (response.statusCode() != 200) {
-                    var body = response.body();
-
-                    logUtil.printLog("Google Chat post may have failed. Response: " + body
-                            + " , Response Code: " + response.statusCode());
-                }
-
-            } catch (InterruptedException | IOException e) {
-                logUtil.printLog("Exception while posting Google Chat message: " + e.getMessage());
-            }
-            return true;
-        }
-        return false;
     }
 }

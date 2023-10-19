@@ -28,17 +28,15 @@ import io.cnaik.service.CommonUtil;
 import io.cnaik.service.LogUtil;
 import io.cnaik.service.ResponseMessageUtil;
 import jenkins.plugins.googlechat.JenkinsTokenExpander;
+import jenkins.plugins.googlechat.MessageFormat;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 
 public class GoogleChatNotification extends Notifier implements SimpleBuildStep {
 
-    private static final String MESSAGE_FORMAT_SIMPLE = "simple";
-    private static final String MESSAGE_FORMAT_CARD = "card";
-
     private String url;
     private String message;
-    private String messageFormat;
+    private MessageFormat messageFormat;
     private boolean sameThreadNotification;
     private String threadKey;
     private boolean notifyAborted;
@@ -62,7 +60,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     }
 
     @DataBoundSetter
-    public void setMessageFormat(String messageFormat) {
+    public void setMessageFormat(MessageFormat messageFormat) {
         this.messageFormat = messageFormat;
     }
 
@@ -127,8 +125,8 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         }
     }
 
-    public String getMessageFormat() {
-        if (StringUtils.isBlank(messageFormat)) {
+    public MessageFormat getMessageFormat() {
+        if (messageFormat == null) {
             return getDescriptor().getMessageFormat();
         } else {
             return messageFormat;
@@ -136,11 +134,11 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     }
 
     public boolean isSimpleMessageFormat() {
-        return MESSAGE_FORMAT_SIMPLE.equals(getMessageFormat());
+        return MessageFormat.SIMPLE == messageFormat;
     }
 
     public boolean isCardMessageFormat() {
-        return MESSAGE_FORMAT_CARD.equals(getMessageFormat());
+        return MessageFormat.CARD == messageFormat;
     }
 
     public String getThreadKey() {
@@ -258,11 +256,11 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
         public static final String PLUGIN_DISPLAY_NAME = "Google Chat Notification";
 
-        public static final String defaultMessageFormat = MESSAGE_FORMAT_SIMPLE;
+        public static final MessageFormat defaultMessageFormat = MessageFormat.SIMPLE;
 
         private String url;
         private String message;
-        private String messageFormat;
+        private MessageFormat messageFormat;
         private boolean sameThreadNotification;
         private String threadKey;
         private boolean notifyAborted;
@@ -285,10 +283,10 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
             return FormValidation.ok();
         }
 
-        public FormValidation doCheckMessage(@QueryParameter String value, @QueryParameter String messageFormat) {
+        public FormValidation doCheckMessage(@QueryParameter String value, @QueryParameter MessageFormat messageFormat) {
             if (value.length() == 0) {
                 return FormValidation.error("Please add message");
-            } else if (MESSAGE_FORMAT_CARD.equals(messageFormat) && !isJSONValid(value)) {
+            } else if (MessageFormat.CARD.equals(messageFormat) && !isJSONValid(value)) {
                 return FormValidation.error("Please provide a valid JSON");
             }
             return FormValidation.ok();
@@ -316,8 +314,8 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         public ListBoxModel doFillMessageFormatItems() {
             ListBoxModel items = new ListBoxModel();
 
-            items.add("Simple text", MESSAGE_FORMAT_SIMPLE);
-            items.add("Card", MESSAGE_FORMAT_CARD);
+            items.add(MessageFormat.SIMPLE.getDisplayName(), MessageFormat.SIMPLE.name());
+            items.add(MessageFormat.CARD.getDisplayName(), MessageFormat.CARD.name());
 
             return items;
         }
@@ -327,7 +325,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
             // set that to properties and call save().
             url = formData.getString("url");
             message = formData.getString("message");
-            messageFormat = formData.getString("messageFormat");
+            messageFormat = MessageFormat.valueOf(formData.getString("messageFormat"));
             sameThreadNotification = formData.getBoolean("sameThreadNotification");
             threadKey = formData.getString("threadKey");
             notifyAborted = formData.getBoolean("notifyAborted");
@@ -351,7 +349,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
             return message;
         }
 
-        public String getMessageFormat() {
+        public MessageFormat getMessageFormat() {
             return messageFormat != null ? messageFormat : defaultMessageFormat;
         }
 

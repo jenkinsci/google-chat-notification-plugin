@@ -88,9 +88,7 @@ public class ResponseMessageUtil {
         var thread = new JSONObject();
         thread.put("threadKey", threadKey);
 
-        if (logUtil.printLogEnabled()) {
-            logUtil.printLog("Will send message to the thread: " + threadKey);
-        }
+        logUtil.printLog("Will send message to the thread: " + threadKey);
 
         return thread;
     }

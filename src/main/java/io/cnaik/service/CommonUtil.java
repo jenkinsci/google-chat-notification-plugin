@@ -35,9 +35,7 @@ public class CommonUtil {
 
         boolean sendNotificationFlag = checkPipelineFlag();
 
-        if (logUtil.printLogEnabled()) {
-            logUtil.printLog("Send Google Chat Notification condition is : " + sendNotificationFlag);
-        }
+        logUtil.printLog("Send Google Chat Notification condition is : " + sendNotificationFlag);
 
         if (!sendNotificationFlag) {
             return;
@@ -51,9 +49,7 @@ public class CommonUtil {
             json = responseMessageUtil.createTextMessage();
         }
 
-        if (logUtil.printLogEnabled()) {
-            logUtil.printLog("Final formatted text: " + json);
-        }
+        logUtil.printLog("Final formatted text: " + json);
 
         notifyForEachUrl(json);
     }
@@ -164,9 +160,7 @@ public class CommonUtil {
                 if (googleChatNotification.isSameThreadNotification()) {
                     urlDetail = urlDetail + "&messageReplyOption=" + MessageReplyOption.REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD;
 
-                    if (logUtil.printLogEnabled()) {
-                        logUtil.printLog("Will send message to the thread: " + googleChatNotification.getThreadKey());
-                    }
+                    logUtil.printLog("Will send message to the thread: " + googleChatNotification.getThreadKey());
                 }
 
                 var client = HttpClient.newHttpClient();
@@ -182,10 +176,8 @@ public class CommonUtil {
                 if (response.statusCode() != 200) {
                     var body = response.body();
 
-                    if (logUtil.printLogEnabled()) {
-                        logUtil.printLog("Google Chat post may have failed. Response: " + body
-                                + " , Response Code: " + response.statusCode());
-                    }
+                    logUtil.printLog("Google Chat post may have failed. Response: " + body
+                            + " , Response Code: " + response.statusCode());
                 }
 
             } catch (InterruptedException | IOException e) {

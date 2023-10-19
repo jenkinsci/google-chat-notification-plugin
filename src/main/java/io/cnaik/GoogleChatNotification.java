@@ -255,6 +255,8 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     @Extension
     public static class Descriptor extends BuildStepDescriptor<Publisher> {
 
+        public static final String PLUGIN_DISPLAY_NAME = "Google Chat Notification";
+
         public static final String defaultMessageFormat = MESSAGE_FORMAT_SIMPLE;
 
         private String url;
@@ -307,7 +309,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
         @Override
         public String getDisplayName() {
-            return "Google Chat Notification";
+            return PLUGIN_DISPLAY_NAME;
         }
 
         public ListBoxModel doFillMessageFormatItems() {

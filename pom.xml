@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
@@ -14,7 +16,8 @@
 
 	<name>Google Chat Notification</name>
 	<description>Google Chat Notification for build status</description>
-	<url>https://wiki.jenkins-ci.org/display/JENKINS/Google+Chat+Notification+Plugin</url>
+	<url>
+		https://wiki.jenkins-ci.org/display/JENKINS/Google+Chat+Notification+Plugin</url>
 
 	<licenses>
 		<license>
@@ -44,9 +47,9 @@
 	<properties>
 		<revision>1.8.0</revision>
 		<changelist>-SNAPSHOT</changelist>
-		
+
 		<gitHubRepo>jenkinsci/google-chat-notification-plugin</gitHubRepo>
-		
+
 		<jenkins.version>2.361.4</jenkins.version>
 		<java.version>11</java.version>
 
@@ -84,6 +87,17 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20230618</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

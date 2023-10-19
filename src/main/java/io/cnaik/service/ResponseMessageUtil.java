@@ -1,12 +1,9 @@
 package io.cnaik.service;
 
-import java.io.IOException;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
-import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.util.UriUtils;
@@ -20,6 +17,7 @@ import io.cnaik.model.google.Header;
 import io.cnaik.model.google.Sections;
 import io.cnaik.model.google.TextParagraph;
 import io.cnaik.model.google.Widgets;
+import jenkins.plugins.googlechat.TokenExpander;
 
 public class ResponseMessageUtil {
 
@@ -28,13 +26,15 @@ public class ResponseMessageUtil {
     private FilePath ws;
     private Run build;
     private LogUtil logUtil;
+    private TokenExpander tokenExpander;
 
-    public ResponseMessageUtil(GoogleChatNotification googleChatNotification) {
+    public ResponseMessageUtil(GoogleChatNotification googleChatNotification, TokenExpander tokenExpander) {
         this.googleChatNotification = googleChatNotification;
         this.taskListener = googleChatNotification.getTaskListener();
         this.ws = googleChatNotification.getWs();
         this.build = googleChatNotification.getBuild();
         this.logUtil = googleChatNotification.getLogUtil();
+        this.tokenExpander = tokenExpander;
     }
 
     public String createTextMessage() {
@@ -52,12 +52,7 @@ public class ResponseMessageUtil {
     }
 
     private String getJobName() {
-        try {
-            return TokenMacro.expandAll(build, ws, taskListener, "${JOB_NAME}", false, null);
-        } catch (MacroEvaluationException | IOException | InterruptedException exception) {
-            logUtil.printLog("Exception while trying to get job name: " + exception.getMessage());
-            return StringUtils.EMPTY;
-        }
+        return tokenExpander.expand("${JOB_NAME}", build, ws);
     }
 
     public String createCardMessage() {
@@ -99,14 +94,7 @@ public class ResponseMessageUtil {
             return inputString;
         }
 
-        try {
-
-            return TokenMacro.expandAll(build, ws, taskListener, inputString, false, null);
-
-        } catch (MacroEvaluationException | IOException | InterruptedException e) {
-            logUtil.printLog("Exception in Token Macro expansion: " + e);
-        }
-        return inputString;
+        return tokenExpander.expand(inputString, build, ws);
     }
 
     private String replaceBuildStatusKeywordWithColorCode(String inputString) {
@@ -119,19 +107,13 @@ public class ResponseMessageUtil {
 
         if (outputString.contains("${BUILD_STATUS}")) {
 
-            try {
-                String buildStatus = TokenMacro.expandAll(build, ws, taskListener, "${BUILD_STATUS}", false, null);
+            String buildStatus = tokenExpander.expand("${BUILD_STATUS}", build, ws);
 
-                if (StringUtils.isNotEmpty(buildStatus)
-                        && buildStatus.toUpperCase(Locale.ENGLISH).contains("FAIL")) {
-                    outputString = outputString.replace("${BUILD_STATUS}", "<font color=\"#ff0000\">${BUILD_STATUS}</font>");
-                } else {
-                    outputString = outputString.replace("${BUILD_STATUS}", "<font color=\"#5DBCD2\">${BUILD_STATUS}</font>");
-                }
-
-            } catch (MacroEvaluationException | IOException | InterruptedException e) {
-                outputString = inputString;
-                logUtil.printLog("Exception in Token Macro expansion: " + e);
+            if (StringUtils.isNotEmpty(buildStatus)
+                    && buildStatus.toUpperCase(Locale.ENGLISH).contains("FAIL")) {
+                outputString = outputString.replace("${BUILD_STATUS}", "<font color=\"#ff0000\">${BUILD_STATUS}</font>");
+            } else {
+                outputString = outputString.replace("${BUILD_STATUS}", "<font color=\"#5DBCD2\">${BUILD_STATUS}</font>");
             }
         } else {
             return outputString;

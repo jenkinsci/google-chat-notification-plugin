@@ -27,6 +27,7 @@ import hudson.util.ListBoxModel;
 import io.cnaik.service.CommonUtil;
 import io.cnaik.service.LogUtil;
 import io.cnaik.service.ResponseMessageUtil;
+import jenkins.plugins.googlechat.JenkinsTokenExpander;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 
@@ -395,7 +396,8 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         LogUtil logUtil = new LogUtil(this);
         this.setLogUtil(logUtil);
 
-        ResponseMessageUtil responseMessageUtil = new ResponseMessageUtil(this);
+        var tokenExpander = new JenkinsTokenExpander(taskListener);
+        ResponseMessageUtil responseMessageUtil = new ResponseMessageUtil(this, tokenExpander);
         this.setResponseMessageUtil(responseMessageUtil);
 
         CommonUtil commonUtil = new CommonUtil(this);

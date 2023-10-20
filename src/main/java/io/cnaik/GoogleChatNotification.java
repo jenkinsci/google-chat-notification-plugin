@@ -278,16 +278,16 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
         public FormValidation doCheckUrl(@QueryParameter String value) {
             if (value.length() == 0) {
-                return FormValidation.error("Please add at least one google chat notification URL");
+                return FormValidation.error(Messages.googleChatNotificationUrlNotDefined());
             }
             return FormValidation.ok();
         }
 
         public FormValidation doCheckMessage(@QueryParameter String value, @QueryParameter MessageFormat messageFormat) {
             if (value.length() == 0) {
-                return FormValidation.error("Please add message");
+                return FormValidation.error(Messages.messageNotDefined());
             } else if (MessageFormat.CARD.equals(messageFormat) && !isJSONValid(value)) {
-                return FormValidation.error("Please provide a valid JSON");
+                return FormValidation.error(Messages.messageNotValidJson());
             }
             return FormValidation.ok();
         }

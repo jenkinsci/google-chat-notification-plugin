@@ -11,6 +11,7 @@ import hudson.FilePath;
 import hudson.model.AbstractBuild;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import io.cnaik.Messages;
 
 public class JenkinsTokenExpander implements TokenExpander {
 
@@ -27,7 +28,7 @@ public class JenkinsTokenExpander implements TokenExpander {
         try {
             return TokenMacro.expandAll(build, listener, template, false, null);
         } catch (MacroEvaluationException | IOException | InterruptedException e) {
-            logger.log(Level.SEVERE, "Failed to process custom message", e);
+            logger.log(Level.SEVERE, Messages.failedToProcessTokenMacros(), e);
             return "[UNPROCESSABLE] " + template;
         }
     }
@@ -37,7 +38,7 @@ public class JenkinsTokenExpander implements TokenExpander {
         try {
             return TokenMacro.expandAll(build, workspace, listener, template, false, null);
         } catch (MacroEvaluationException | IOException | InterruptedException e) {
-            logger.log(Level.SEVERE, "Failed to process custom message", e);
+            logger.log(Level.SEVERE, Messages.failedToProcessTokenMacros(), e);
             return "[UNPROCESSABLE] " + template;
         }
     }

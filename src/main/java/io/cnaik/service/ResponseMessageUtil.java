@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import hudson.FilePath;
 import hudson.model.Run;
 import io.cnaik.GoogleChatNotification;
+import io.cnaik.Messages;
 import jenkins.plugins.googlechat.GoogleChatRequest;
 import jenkins.plugins.googlechat.TokenExpander;
 
@@ -49,8 +50,7 @@ public class ResponseMessageUtil {
                             .withCardConfig(cardConfig);
 
                     if (cardConfig.has("thread")) {
-                        logUtil.printLog(
-                                "WARN: Since the provided JSON message already contains a 'thread' key, the plugin parameters 'sameThreadNotification' and 'threadKey' will be ignored");
+                        logUtil.printLog(Messages.providedJsonMessageContainsThreadKey());
                     } else {
                         var threadKey = getThreadKeyForMessages();
                         requestBuilder.withThread(threadKey);
@@ -64,7 +64,7 @@ public class ResponseMessageUtil {
         try {
             return Optional.of(new JSONObject(message));
         } catch (JSONException exception) {
-            logUtil.printLog("Exception while trying to process JSON message: " + exception.getMessage());
+            logUtil.printLog(Messages.exceptionProcessingJsonMessage(exception.getMessage()));
             return Optional.empty();
         }
     }
@@ -74,7 +74,7 @@ public class ResponseMessageUtil {
         if (googleChatNotification.isSameThreadNotification()) {
             threadKey = StringUtils.defaultIfBlank(replaceJenkinsKeywords(googleChatNotification.getThreadKey()), getJobName());
         }
-        logUtil.printLog("Will send message to the thread: " + threadKey);
+        logUtil.printLog(Messages.willSendMessageToThread(threadKey));
         return threadKey;
     }
 
@@ -83,11 +83,6 @@ public class ResponseMessageUtil {
     }
 
     private String replaceJenkinsKeywords(String inputString) {
-
-        if (StringUtils.isEmpty(inputString)) {
-            return inputString;
-        }
-
         return tokenExpander.expand(inputString, build, ws);
     }
 

@@ -3,6 +3,7 @@ package io.cnaik.service;
 import hudson.model.Result;
 import hudson.model.Run;
 import io.cnaik.GoogleChatNotification;
+import io.cnaik.Messages;
 import jenkins.plugins.googlechat.GoogleChatRequest;
 import jenkins.plugins.googlechat.GoogleChatService;
 import jenkins.plugins.googlechat.StandardGoogleChatService;
@@ -26,7 +27,7 @@ public class CommonUtil {
     public void send() {
         boolean sendNotificationFlag = checkPipelineFlag();
 
-        logUtil.printLog("Send Google Chat Notification condition is : " + sendNotificationFlag);
+        logUtil.printLog(Messages.sendGoogleChatNotificationCondition(sendNotificationFlag));
 
         if (!sendNotificationFlag) {
             return;
@@ -40,13 +41,13 @@ public class CommonUtil {
             request = responseMessageUtil.createTextMessage();
         }
 
-        logUtil.printLog("Final formatted text: " + request.getBody());
+        logUtil.printLog(Messages.finalFormattedText(request.getBody()));
 
         String[] urlDetails = googleChatNotification.getUrl().split(",");
 
         var success = googleChatService.publish(request, urlDetails);
         if (!success) {
-            logUtil.printLog("Operation may have failed. Please check system log for details.");
+            logUtil.printLog(Messages.operationMayHaveFailed());
         }
     }
 

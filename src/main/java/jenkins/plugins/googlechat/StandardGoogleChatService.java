@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.cnaik.Messages;
 import io.cnaik.model.google.MessageReplyOption;
 
 public class StandardGoogleChatService implements GoogleChatService {
@@ -49,7 +50,7 @@ public class StandardGoogleChatService implements GoogleChatService {
             }
 
             if (!success) {
-                logger.log(Level.WARNING, "Invalid Google Chat Notification URL found: " + urlDetail);
+                logger.log(Level.WARNING, Messages.invalidGoogleChatNotificationUrl(urlDetail));
             }
         }
 
@@ -67,7 +68,7 @@ public class StandardGoogleChatService implements GoogleChatService {
             try {
                 if (request.getThread() != null) {
                     urlDetail = urlDetail + "&messageReplyOption=" + MessageReplyOption.REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD;
-                    logger.log(Level.INFO, "Will send message to thread: '" + request.getThread() + "'. If it doesn't exist yet, it will be created.");
+                    logger.log(Level.INFO, Messages.willSendMessageToThread(request.getThread()));
                 }
 
                 var client = getHttpClient();
@@ -82,12 +83,12 @@ public class StandardGoogleChatService implements GoogleChatService {
                 responseString = response.body();
 
                 if (response.statusCode() != 200) {
-                    logger.log(Level.WARNING, "Google Chat post may have failed. Response: " + responseString + " , Response Code: " + response.statusCode());
+                    logger.log(Level.WARNING, Messages.googleChatPostMayHaveFailed(responseString, response.statusCode()));
                     success = false;
                 }
 
             } catch (InterruptedException | IOException e) {
-                logger.log(Level.WARNING, "Exception while posting Google Chat message: " + e.getMessage());
+                logger.log(Level.WARNING, Messages.exceptionPostingGoogleChatMessage(e.getMessage()));
                 success = false;
             }
         } else {

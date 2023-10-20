@@ -7,6 +7,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class GoogleChatRequest {
 
+    private static final String DEFAULT_ENCODING = "UTF-8";
+
     private final String message;
     private final String thread;
     private final JSONObject cardConfig;
@@ -47,7 +49,7 @@ public class GoogleChatRequest {
 
     private JSONObject createThreadJson(String threadKey) {
         var thread = new JSONObject();
-        thread.put("threadKey", UriUtils.encodePath(threadKey, "UTF-8"));
+        thread.put("threadKey", UriUtils.encodePath(threadKey, DEFAULT_ENCODING));
         return thread;
     }
 

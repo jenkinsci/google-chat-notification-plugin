@@ -1,6 +1,5 @@
 package io.cnaik.service;
 
-import java.util.Locale;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -9,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import hudson.FilePath;
+import hudson.model.Result;
 import hudson.model.Run;
 import io.cnaik.GoogleChatNotification;
 import io.cnaik.Messages;
@@ -16,6 +16,12 @@ import jenkins.plugins.googlechat.GoogleChatRequest;
 import jenkins.plugins.googlechat.TokenExpander;
 
 public class ResponseMessageUtil {
+
+    private static final String JENKINS_BUILD_STATUS_ENV_VAR = "${BUILD_STATUS}";
+    private static final String JENKINS_JOB_NAME_ENV_VAR = "${JOB_NAME}";
+
+    private static final String HEX_COLOR_TEAL = "#5DBCD2";
+    private static final String HEX_COLOR_RED = "#ff0000";
 
     private GoogleChatNotification googleChatNotification;
     private FilePath ws;
@@ -46,8 +52,7 @@ public class ResponseMessageUtil {
 
         return toJson(cardConfigString)
                 .map(cardConfig -> {
-                    var requestBuilder = GoogleChatRequest.newCardRequest()
-                            .withCardConfig(cardConfig);
+                    var requestBuilder = GoogleChatRequest.newCardRequest().withCardConfig(cardConfig);
 
                     if (cardConfig.has("thread")) {
                         logUtil.printLog(Messages.providedJsonMessageContainsThreadKey());
@@ -79,7 +84,7 @@ public class ResponseMessageUtil {
     }
 
     private String getJobName() {
-        return tokenExpander.expand("${JOB_NAME}", build, ws);
+        return tokenExpander.expand(JENKINS_JOB_NAME_ENV_VAR, build, ws);
     }
 
     private String replaceJenkinsKeywords(String inputString) {
@@ -87,26 +92,26 @@ public class ResponseMessageUtil {
     }
 
     private String replaceBuildStatusKeywordWithColorCode(String inputString) {
-
         String outputString = inputString;
 
         if (StringUtils.isEmpty(outputString)) {
             return outputString;
         }
 
-        if (outputString.contains("${BUILD_STATUS}")) {
+        if (outputString.contains(JENKINS_BUILD_STATUS_ENV_VAR)) {
+            var buildStatus = build.getResult();
 
-            String buildStatus = tokenExpander.expand("${BUILD_STATUS}", build, ws);
-
-            if (StringUtils.isNotEmpty(buildStatus)
-                    && buildStatus.toUpperCase(Locale.ENGLISH).contains("FAIL")) {
-                outputString = outputString.replace("${BUILD_STATUS}", "<font color=\"#ff0000\">${BUILD_STATUS}</font>");
+            if (buildStatus == Result.FAILURE) {
+                outputString = outputString.replace(JENKINS_BUILD_STATUS_ENV_VAR,
+                        "<font color=\"" + HEX_COLOR_RED + "\">" + JENKINS_BUILD_STATUS_ENV_VAR + "</font>");
             } else {
-                outputString = outputString.replace("${BUILD_STATUS}", "<font color=\"#5DBCD2\">${BUILD_STATUS}</font>");
+                outputString = outputString.replace(JENKINS_BUILD_STATUS_ENV_VAR,
+                        "<font color=\"" + HEX_COLOR_TEAL + "\">" + JENKINS_BUILD_STATUS_ENV_VAR + "</font>");
             }
         } else {
             return outputString;
         }
+
         return outputString;
     }
 }

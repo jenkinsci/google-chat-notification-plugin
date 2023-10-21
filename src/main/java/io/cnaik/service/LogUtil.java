@@ -26,4 +26,8 @@ public class LogUtil {
         var key = BuildKey.format(googleChatNotification.getBuild());
         logger.info(key, message);
     }
+    
+    public GoogleChatNotificationsLogger getLogger() {
+        return logger;
+    }
 }

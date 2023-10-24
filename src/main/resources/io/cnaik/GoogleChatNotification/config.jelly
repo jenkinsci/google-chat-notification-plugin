@@ -33,7 +33,11 @@
         <f:checkbox/>
     </f:entry>
 
-    <f:entry title="Notify Failure" field="notifyFailure">
+    <f:entry title="Notify Regression" field="notifyRegression">
+        <f:checkbox/>
+    </f:entry>
+
+    <f:entry title="Notify Every Failure" field="notifyFailure">
         <f:checkbox/>
     </f:entry>
 
@@ -53,8 +57,17 @@
         <f:checkbox/>
     </f:entry>
 
-    <f:entry title="Suppress Info Logs" field="suppressInfoLoggers">
-        <f:checkbox/>
-    </f:entry>
+   	<f:advanced>
+		<f:entry title="Notify First Failure Only" field="notifySingleFailure">
+		    <f:checkbox/>
+		</f:entry>
+		<f:entry title="Notify Repeated Failure Only" field="notifyRepeatedFailure">
+		    <f:checkbox/>
+		</f:entry>
+		
+	    <f:entry title="Suppress Info Logs" field="suppressInfoLoggers">
+        	<f:checkbox/>
+    	</f:entry>
+	</f:advanced>
 
 </j:jelly>

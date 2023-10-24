@@ -35,7 +35,7 @@ This plugin is supported for Jenkins version **2.361.4 or higher**.
 ## How to use it in pipeline script
 
 Use below command
-### googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent', messageFormat: 'simple|card', sameThreadNotification: 'true', threadKey: '', notifyAborted: 'true', notifyFailure: 'true', notifyNotBuilt: 'true', notifySuccess: 'true', notifyUnstable: 'true', notifyBackToNormal: 'true', suppressInfoLoggers: 'true'
+### googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent', messageFormat: 'simple|card', sameThreadNotification: 'true', threadKey: '', notifyAborted: 'true', notifyFailure: 'true', notifyNotBuilt: 'true', notifySuccess: 'true', notifyUnstable: 'true', notifyBackToNormal: 'true', notifySingleFailure: 'false', notifyRepeatedFailure: 'false', suppressInfoLoggers: 'true'
 
 ## Please find explanations for each fields as below, usage for all fields remains same for build job and pipeline:
 
@@ -98,6 +98,14 @@ Use below command
 1. **notifyBackToNormal**
    - This is an optional boolean parameter. Default value is false.
    - Notification message to be sent when build status is SUCCESS and previous build status was not SUCCESS.
+   
+1. **notifySingleFailure**
+   - This is an optional boolean parameter. Default value is false.
+   - Notification message to be sent when build status is FAILURE and only on single failed build.
+   
+1. **notifyRepeatedFailure**
+   - This is an optional boolean parameter. Default value is false.
+   - Notification message to be sent when build status is FAILURE and only on repeated failures.
 
 1. **suppressInfoLoggers**
    - This is an optional boolean parameter. Default value is false.

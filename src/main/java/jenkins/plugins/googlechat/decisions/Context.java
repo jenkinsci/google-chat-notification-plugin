@@ -3,6 +3,7 @@ package jenkins.plugins.googlechat.decisions;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import hudson.model.Result;
 import hudson.model.Run;
+import hudson.tasks.junit.TestResultAction;
 import jenkins.plugins.googlechat.logging.BuildKey;
 
 public class Context {
@@ -39,5 +40,23 @@ public class Context {
             return Result.SUCCESS;
         }
         return current.getResult();
+    }
+
+    @Nullable
+    private TestResultAction getTestResult(Run<?, ?> build) {
+        if (build == null) {
+            return null;
+        }
+        return build.getAction(TestResultAction.class);
+    }
+
+    @Nullable
+    public TestResultAction getPreviousTestResult() {
+        return getTestResult(previous);
+    }
+
+    @Nullable
+    public TestResultAction getCurrentTestResult() {
+        return getTestResult(current);
     }
 }

@@ -41,6 +41,9 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     private String threadKey;
     private boolean notifyAborted;
     private boolean notifyFailure;
+    private boolean notifySingleFailure;
+    private boolean notifyRepeatedFailure;
+    private boolean notifyRegression;
     private boolean notifyNotBuilt;
     private boolean notifySuccess;
     private boolean notifyUnstable;
@@ -82,6 +85,21 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     @DataBoundSetter
     public void setNotifyFailure(boolean notifyFailure) {
         this.notifyFailure = notifyFailure;
+    }
+
+    @DataBoundSetter
+    public void setNotifySingleFailure(boolean notifySingleFailure) {
+        this.notifySingleFailure = notifySingleFailure;
+    }
+
+    @DataBoundSetter
+    public void setNotifyRepeatedFailure(boolean notifyRepeatedFailure) {
+        this.notifyRepeatedFailure = notifyRepeatedFailure;
+    }
+
+    @DataBoundSetter
+    public void setNotifyRegression(boolean notifyRegression) {
+        this.notifyRegression = notifyRegression;
     }
 
     @DataBoundSetter
@@ -159,6 +177,18 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
     public boolean isNotifyFailure() {
         return notifyFailure;
+    }
+
+    public boolean isNotifySingleFailure() {
+        return notifySingleFailure;
+    }
+
+    public boolean isNotifyRepeatedFailure() {
+        return notifyRepeatedFailure;
+    }
+
+    public boolean isNotifyRegression() {
+        return notifyRegression;
     }
 
     public boolean isNotifyNotBuilt() {

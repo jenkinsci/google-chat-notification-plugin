@@ -247,7 +247,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
     @Override
     public BuildStepMonitor getRequiredMonitorService() {
-        return BuildStepMonitor.BUILD;
+        return BuildStepMonitor.NONE;
     }
 
     @Symbol("googlechatnotification")

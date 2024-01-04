@@ -101,11 +101,11 @@ Use below command
    
 1. **notifySingleFailure**
    - This is an optional boolean parameter. Default value is false.
-   - Notification message to be sent when build status is FAILURE and only on single failed build.
+   - Notification message to be sent when build status is FAILURE and **only** on single failed build.
    
 1. **notifyRepeatedFailure**
    - This is an optional boolean parameter. Default value is false.
-   - Notification message to be sent when build status is FAILURE and only on repeated failures.
+   - Notification message to be sent when build status is FAILURE and **only** on repeated failures.
 
 1. **suppressInfoLoggers**
    - This is an optional boolean parameter. Default value is false.

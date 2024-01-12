@@ -68,6 +68,11 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
     }
 
     @DataBoundSetter
+    public void setMessageFormat(@QueryParameter("messageFormat") final String messageFormat) {
+        this.messageFormat = messageFormat != null ? MessageFormat.valueOf(messageFormat.toUpperCase()) : null;
+    }
+
+    @DataBoundSetter
     public void setSameThreadNotification(boolean sameThreadNotification) {
         this.sameThreadNotification = sameThreadNotification;
     }
@@ -382,7 +387,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         public MessageFormat getMessageFormat() {
             return messageFormat != null ? messageFormat : defaultMessageFormat;
         }
-
+        
         public boolean isSameThreadNotification() {
             return sameThreadNotification;
         }

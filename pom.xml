@@ -48,7 +48,7 @@
 
 		<gitHubRepo>jenkinsci/google-chat-notification-plugin</gitHubRepo>
 
-		<jenkins.version>2.361.4</jenkins.version>
+		<jenkins.version>2.375.4</jenkins.version>
 		<java.version>11</java.version>
 
 		<spotbugs.effort>Max</spotbugs.effort>
@@ -114,8 +114,8 @@
 		<dependencies>
 			<dependency>
 				<groupId>io.jenkins.tools.bom</groupId>
-				<artifactId>bom-2.361.x</artifactId>
-				<version>2102.v854b_fec19c92</version>
+				<artifactId>bom-2.375.x</artifactId>
+				<version>2198.v39c76fc308ca</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>

@@ -1,5 +1,7 @@
 package io.cnaik;
 
+import java.util.Locale;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.Symbol;
 import org.json.JSONException;
@@ -69,7 +71,7 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
     @DataBoundSetter
     public void setMessageFormat(@QueryParameter("messageFormat") final String messageFormat) {
-        this.messageFormat = messageFormat != null ? MessageFormat.valueOf(messageFormat.toUpperCase()) : null;
+        this.messageFormat = messageFormat != null ? MessageFormat.valueOf(messageFormat.toUpperCase(Locale.ROOT)) : null;
     }
 
     @DataBoundSetter

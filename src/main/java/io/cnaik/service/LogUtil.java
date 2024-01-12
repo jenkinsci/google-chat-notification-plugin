@@ -2,6 +2,8 @@ package io.cnaik.service;
 
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.cnaik.GoogleChatNotification;
 import jenkins.plugins.googlechat.logging.BuildKey;
 import jenkins.plugins.googlechat.logging.GoogleChatNotificationsLogger;
@@ -24,9 +26,14 @@ public class LogUtil {
 
     public void printLog(String message) {
         var key = BuildKey.format(googleChatNotification.getBuild());
-        logger.info(key, message);
+        logger.info(key, StringUtils.replaceAll(message, "%", "%%"));
     }
-    
+
+    public void printLog(String message, Object... args) {
+        var key = BuildKey.format(googleChatNotification.getBuild());
+        logger.info(key, message, args);
+    }
+
     public GoogleChatNotificationsLogger getLogger() {
         return logger;
     }

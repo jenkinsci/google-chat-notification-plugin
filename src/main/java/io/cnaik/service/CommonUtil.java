@@ -31,7 +31,7 @@ public class CommonUtil {
 
         if (sendNotificationFlag) {
             var request = createGoogleChatRequest();
-            logUtil.printLog(Messages.finalFormattedText(request.getBody()));
+            logUtil.printLog("Request body:\n%s", Messages.finalFormattedText(request.getBody()));
 
             String[] urlDetails = googleChatNotification.getUrl().split(",");
             var success = googleChatService.publish(request, urlDetails);

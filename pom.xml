@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>google-chat-notification</artifactId>
-	<version>${revision}${changelist}</version>
+	<version>${changelist}</version>
 	<packaging>hpi</packaging>
 
 	<name>Google Chat Notification</name>
@@ -43,8 +43,7 @@
 	</developers>
 
 	<properties>
-		<revision>1.8.2</revision>
-		<changelist>-SNAPSHOT</changelist>
+		<changelist>999999-SNAPSHOT</changelist>
 
 		<gitHubRepo>jenkinsci/google-chat-notification-plugin</gitHubRepo>
 

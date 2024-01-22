@@ -64,7 +64,6 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
         this.message = message;
     }
 
-    @DataBoundSetter
     public void setMessageFormat(MessageFormat messageFormat) {
         this.messageFormat = messageFormat;
     }

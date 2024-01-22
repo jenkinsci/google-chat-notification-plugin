@@ -52,7 +52,8 @@ public class CommonUtil {
     }
 
     private boolean checkWhetherToSend() {
-        if (build == null || build.getResult() == null || googleChatNotification == null) {
+        if (build == null || googleChatNotification == null) {
+            // build.getResult() == null for builds that didn't finish yet
             return false;
         } else {
             var conditions = NotificationConditions.create(googleChatNotification, logUtil.getLogger());

@@ -8,36 +8,31 @@
 Google Chat Notification Jenkins Plugin to send build status to [Google Chat][google-chat].
 
 This Jenkins plugin allows you to send Google Chat notification as a post build action or as a pipeline script.
-This plugin is supported for Jenkins version **2.361.4 or higher**.
 
-![Screenshot][img-output-sample]
+## Install Instructions for Google Chat
 
-## Prerequisites
+1.  [Create a webhook in Google][google-chat-create-webhook] Chat Space to send notifications
+2.  Install this plugin on your Jenkins server:
 
-- You must [create a web hook in google][google-chat-create-webhook] chat group to send notification.
+    1.  From the Jenkins homepage navigate to `Manage Jenkins`
+    2.  Navigate to `Manage Plugins`,
+    3.  Change the tab to `Available`,
+    4.  Search for `google-chat-notification`,
+    5.  Check the box next to install.
 
-![Screenshot][img-configure-web-hook]
+![image][img-plugin-manager]
 
-## How to configure it in post build action
+## Pipeline job
 
-- Click on Add post-build action button
+### Simpliest configuration
 
-![Screenshot][img-add-post-build-action]
+    googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent'
 
-- Click on Google Chat Notification
+### Full configuration
 
-![Screenshot][img-post-build-action-google-chat]
+    googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent', messageFormat: 'simple|card', sameThreadNotification: 'true', threadKey: '', notifyAborted: 'true', notifyFailure: 'true', notifyNotBuilt: 'true', notifySuccess: 'true', notifyUnstable: 'true', notifyBackToNormal: 'true', notifySingleFailure: 'false', notifyRepeatedFailure: 'false', suppressInfoLoggers: 'true'
 
-- Configure URL (web hook URL configured in prerequisites), message (build message) and type of build result you want to send notification. You can configure multiple URLs separated by comma.
-
-![Screenshot][img-post-build-action-google-chat-config]
-
-## How to use it in pipeline script
-
-Use below command
-### googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent', messageFormat: 'simple|card', sameThreadNotification: 'true', threadKey: '', notifyAborted: 'true', notifyFailure: 'true', notifyNotBuilt: 'true', notifySuccess: 'true', notifyUnstable: 'true', notifyBackToNormal: 'true', notifySingleFailure: 'false', notifyRepeatedFailure: 'false', suppressInfoLoggers: 'true'
-
-## Please find explanations for each fields as below, usage for all fields remains same for build job and pipeline:
+### Parameters
 
 1. **url**
    - This is a mandatory String parameter.
@@ -111,9 +106,63 @@ Use below command
    - This is an optional boolean parameter. Default value is false.
    - Suppress all info loggers in Jenkins build.
 
-### Default behaviour of plugin is to send notifications for all build status unless overridden with true value for above defined build statuses.
+Default behaviour of plugin is to send notifications for all build status unless overridden with true value for above defined build statuses.
 
-## Report an Issue
+### Sample configurations
+
+TODO
+
+```groovy
+googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent', messageFormat: 'simple|card', sameThreadNotification: 'true', threadKey: '', notifyAborted: 'true', notifyFailure: 'true', notifyNotBuilt: 'true', notifySuccess: 'true', notifyUnstable: 'true', notifyBackToNormal: 'true', notifySingleFailure: 'false', notifyRepeatedFailure: 'false', suppressInfoLoggers: 'true'
+```
+
+#### Git commit info
+
+
+
+## Freestyle job
+
+1.  Configure it in your Jenkins job (and optionally as global configuration) and
+    **add it as a Post-build action**.
+
+## User Mentions
+
+Use the syntax `<@user_id>` in a message to mention users directly. See [User Id Look Up](#user-id-look-up) for pipeline steps to help with user id look up.
+
+## Troubleshooting connection failure
+
+When testing the connection, you may see errors like:
+
+```text
+    WARNING j.p.googlechat.StandardGoogleChatService#publish: Invalid Google Chat Notification URL found:
+```
+
+There's a couple of things to try:
+
+### Enable additional logging
+
+Add a [log recorder](https://support.cloudbees.com/hc/en-us/articles/204880580-How-do-I-create-a-logger-in-Jenkins-for-troubleshooting-and-diagnostic-information-) for the [StandardSlackService](https://github.com/jenkinsci/google-chat-notification-plugin/blob/master/src/main/java/jenkins/plugins/googlechat/StandardGoogleChatService.java) class this should give you additional details on what's going on.
+
+If you still can't figure it out please raise an issue with as much information as possible about your config and any relevant logs.
+
+## Developer instructions
+
+Install Maven and JDK.
+
+```shell
+$ mvn -version | grep -v home
+Apache Maven 3.3.9 (bb52d8502b132ec0a5a3f4c09453c07478323dc5; 2015-11-10T08:41:47-08:00)
+Java version: 1.7.0_79, vendor: Oracle Corporation
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.4.0-65-generic", arch: "amd64", family: "unix"
+```
+
+Run build and create an HPI file to install in Jenkins (HPI file will be in
+`target/google-chat-notification.hpi`).
+
+```shell
+mvn clean verify
+```
 
 Please report issues and enhancements through the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#24023).
 

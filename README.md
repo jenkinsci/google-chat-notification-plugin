@@ -108,17 +108,65 @@ This Jenkins plugin allows you to send Google Chat notification as a post build 
 
 Default behaviour of plugin is to send notifications for all build status unless overridden with true value for above defined build statuses.
 
-### Sample configurations
+### Use cases
 
-TODO
+You can expose Git commit info in your pipeline with something like this:
 
 ```groovy
-googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent', messageFormat: 'simple|card', sameThreadNotification: 'true', threadKey: '', notifyAborted: 'true', notifyFailure: 'true', notifyNotBuilt: 'true', notifySuccess: 'true', notifyUnstable: 'true', notifyBackToNormal: 'true', notifySingleFailure: 'false', notifyRepeatedFailure: 'false', suppressInfoLoggers: 'true'
+environment {
+    GIT_LAST_AUTHOR = sh(script: 'git --no-pager show -s --format=\'%an\' $GIT_COMMIT', returnStdout: true).trim()
+    GIT_LAST_COMMIT = sh(script: 'git log -1 --pretty=\'%B\'', returnStdout: true).trim()
+}
 ```
 
-#### Git commit info
+A) Simple notification with build info.
+
+![Notification example][img-usecases-a]
 
 
+```groovy
+googlechatnotification url: 'web hook(s) URL(s)',
+    message: "${env.JOB_NAME} : Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}: Check output at ${env.BUILD_URL}"
+```
+
+B) Notification with build info and Git commit details.
+
+![Notification example][img-usecases-b]
+
+```groovy
+googlechatnotification url: 'web hook(s) URL(s)',
+    message: "Build ${currentBuild.currentResult}:\n Job ${env.JOB_NAME}\n build ${env.BUILD_NUMBER}\n last commit ```${env.GIT_LAST_COMMIT}```\n author *${env.GIT_LAST_AUTHOR}*\n Full details click on link: ${env.BUILD_URL}"
+```
+
+C) Includes the last Git commit author and text in the notification only when the build result is `UNTABLE` or worse.
+
+![Notification example][img-usecases-c]
+
+```groovy
+String buildResult = currentBuild.currentResult
+String buildDetails = currentBuild.resultIsWorseOrEqualTo("UNSTABLE") 
+        ? "\nLast commit author: *${env.GIT_LAST_AUTHOR}*\n ```${env.GIT_LAST_COMMIT}```"
+        : '';
+
+googlechatnotification url: 'web hook(s) URL(s)',
+    message: "*${env.JOB_NAME}* - Build ${env.BUILD_ID} (<${env.BUILD_URL}|Details>) ${currentBuild.description} ${buildDetails}"
+```
+
+D) Inclues an emoji and a custom color for each build result (`SUCCESS`, `UNSTABLE` and `FAILURE`).
+
+![Notification example][img-usecases-d]
+
+```groovy
+String buildResult = currentBuild.currentResult
+def statusIcons = [SUCCESS: '\\u2714', UNSTABLE: '\\u26a0', FAILURE: '\\u274c']
+def colors = [SUCCESS: '#5DBCD2', UNSTABLE: '#aca620', FAILURE: '#ff0000']
+
+def buildStatusIcon = statusIcons[buildResult] ?: '\\u1F648'
+def buildStatusWithColor = "<font color=\"${colors[buildResult] ?: ''}\">${currentBuild.currentResult}</font>"
+
+googlechatnotification url: 'web hook(s) URL(s)',
+    message: "${buildStatusIcon} ${buildStatusWithColor}: *${env.JOB_NAME}* - Build ${env.BUILD_ID} (<${env.BUILD_URL}|Details>)"
+```
 
 ## Freestyle job
 
@@ -127,7 +175,7 @@ googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent',
 
 ## User Mentions
 
-Use the syntax `<@user_id>` in a message to mention users directly. See [User Id Look Up](#user-id-look-up) for pipeline steps to help with user id look up.
+Use the syntax `<users/{GOOGLE_CHAT_USER_ID}>` in a message to mention users directly. See [Google Chat User ID](#google-chat-user-id) for tips on how to obtain a User ID.
 
 ## Troubleshooting connection failure
 
@@ -184,6 +232,8 @@ Please report issues and enhancements through the [Jenkins issue tracker](https:
 
 [google-chat-create-webhook]: https://developers.google.com/chat/how-tos/webhooks?hl=pt-br#step_1_register_the_incoming_webhook
 
+[google-chat-user-id]: https://stackoverflow.com/questions/49439731/how-can-a-webhook-identify-user-ids
+
 [img-configure-web-hook]: docs/configure-web-hook.png
 
 [img-add-post-build-action]: docs/add-post-build-action.png
@@ -194,4 +244,10 @@ Please report issues and enhancements through the [Jenkins issue tracker](https:
 
 [img-add-credential]: docs/add-credential.png
 
-[img-output-sample]: docs/output-sample.png
+[img-usecases-a]: docs/usecases-a.png
+
+[img-usecases-b]: docs/usecases-b.png
+
+[img-usecases-c]: docs/usecases-c.png
+
+[img-usecases-d]: docs/usecases-d.png

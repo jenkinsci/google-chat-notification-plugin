@@ -43,7 +43,7 @@
 	</developers>
 
 	<properties>
-		<revision>1.8.2</revision>
+		<revision>1.8.3</revision>
 		<changelist>-SNAPSHOT</changelist>
 
 		<gitHubRepo>jenkinsci/google-chat-notification-plugin</gitHubRepo>

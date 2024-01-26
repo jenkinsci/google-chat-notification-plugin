@@ -234,6 +234,8 @@ Please report issues and enhancements through the [Jenkins issue tracker](https:
 
 [google-chat-user-id]: https://stackoverflow.com/questions/49439731/how-can-a-webhook-identify-user-ids
 
+[img-plugin-manager]: docs/plugin-manager.png
+
 [img-configure-web-hook]: docs/configure-web-hook.png
 
 [img-add-post-build-action]: docs/add-post-build-action.png

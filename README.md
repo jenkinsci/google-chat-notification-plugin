@@ -119,7 +119,7 @@ environment {
 }
 ```
 
-A) Simple notification with build info.
+#### Simple notification with build info
 
 ![Notification example][img-usecases-a]
 
@@ -129,7 +129,7 @@ googlechatnotification url: 'web hook(s) URL(s)',
     message: "${env.JOB_NAME} : Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}: Check output at ${env.BUILD_URL}"
 ```
 
-B) Notification with build info and Git commit details.
+#### Notification with build info and Git commit details
 
 ![Notification example][img-usecases-b]
 
@@ -138,7 +138,7 @@ googlechatnotification url: 'web hook(s) URL(s)',
     message: "Build ${currentBuild.currentResult}:\n Job ${env.JOB_NAME}\n build ${env.BUILD_NUMBER}\n last commit ```${env.GIT_LAST_COMMIT}```\n author *${env.GIT_LAST_AUTHOR}*\n Full details click on link: ${env.BUILD_URL}"
 ```
 
-C) Includes the last Git commit author and text in the notification only when the build result is `UNTABLE` or worse.
+#### Includes the last Git commit author and text in the notification only when the build result is `UNTABLE` or worse
 
 ![Notification example][img-usecases-c]
 
@@ -152,7 +152,7 @@ googlechatnotification url: 'web hook(s) URL(s)',
     message: "*${env.JOB_NAME}* - Build ${env.BUILD_ID} (<${env.BUILD_URL}|Details>) ${currentBuild.description} ${buildDetails}"
 ```
 
-D) Inclues an emoji and a custom color for each build result (`SUCCESS`, `UNSTABLE` and `FAILURE`).
+#### Inclues an emoji and a custom color for each build result (`SUCCESS`, `UNSTABLE` and `FAILURE`)
 
 ![Notification example][img-usecases-d]
 

@@ -29,7 +29,7 @@ public class JenkinsTokenExpander implements TokenExpander {
             return TokenMacro.expandAll(build, listener, template, false, null);
         } catch (MacroEvaluationException | IOException | InterruptedException e) {
             logger.log(Level.SEVERE, Messages.failedToProcessTokenMacros(), e);
-            return "[UNPROCESSABLE] " + template;
+            return template;
         }
     }
 
@@ -39,7 +39,7 @@ public class JenkinsTokenExpander implements TokenExpander {
             return TokenMacro.expandAll(build, workspace, listener, template, false, null);
         } catch (MacroEvaluationException | IOException | InterruptedException e) {
             logger.log(Level.SEVERE, Messages.failedToProcessTokenMacros(), e);
-            return "[UNPROCESSABLE] " + template;
+            return template;
         }
     }
 }

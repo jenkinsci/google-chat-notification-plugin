@@ -67,6 +67,7 @@ public class ResponseMessageUtil {
 
     private Optional<JSONObject> toJson(String jsonMessage) {
         try {
+            logUtil.printDebug("Parsing JSON config:\n%s", jsonMessage);
             return Optional.of(new JSONObject(jsonMessage));
         } catch (JSONException exception) {
             logUtil.printLog(Messages.exceptionProcessingJsonMessage(exception.getMessage()));

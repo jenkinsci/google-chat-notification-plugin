@@ -219,10 +219,10 @@ googlechatnotification url: 'web hook(s) URL(s)',
 }
 ```
 
-See [Format a card message](google-chat-format-card-message) for instructions on how to format text in a card message.
+See [Format a card message][google-chat-format-card-message] for instructions on how to format text in a card message.
 
-- You may use [Pipeline Utility Steps](jenkins-pipeline-read-json) to read a JSON file in the workspace.
-- You may use [Config File Provider](jenkins-config-file-provider) to copy a JSON file stored globally in Jenkins.
+- You may use [Pipeline Utility Steps][jenkins-pipeline-read-json] to read a JSON file in the workspace.
+- You may use [Config File Provider][jenkins-config-file-provider] to copy a JSON file stored globally in Jenkins.
 
 *Pipeline*
 
@@ -245,7 +245,7 @@ configFileProvider([configFile(fileId: '9d792a84-6224-4529-aa30-2296e97df64e', t
 
 ## User Mentions
 
-Use the syntax `<users/{GOOGLE_CHAT_USER_ID}>` in a message to mention users directly. See [Google Chat User ID](google-chat-user-id) for tips on how to obtain a User ID.
+Use the syntax `<users/{GOOGLE_CHAT_USER_ID}>` in a message to mention users directly. See [Google Chat User ID][google-chat-user-id] for tips on how to obtain a User ID.
 
 ## Troubleshooting connection failure
 

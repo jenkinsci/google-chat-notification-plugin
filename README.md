@@ -56,7 +56,7 @@ This Jenkins plugin allows you to send Google Chat notification as a post build 
 1. **messageFormat**
    - This is an optional String parameter.
    - The format of the message sent. Default value is `simple`.
-   - If `card` is provided as value, the parameter `message` must be a [valid JSON configuration](https://developers.google.com/chat/reference/message-formats/cards) for card message.
+   - If `card` is provided as value, the parameter `message` must be a [valid JSON configuration](https://developers.google.com/chat/api/guides/v1/messages/create?hl=pt-br#create) for card message.
    
 1. **sameThreadNotification**
    - This is an optional boolean parameter. Default value is false.
@@ -152,7 +152,7 @@ googlechatnotification url: 'web hook(s) URL(s)',
     message: "*${env.JOB_NAME}* - Build ${env.BUILD_ID} (<${env.BUILD_URL}|Details>) ${currentBuild.description} ${buildDetails}"
 ```
 
-#### Inclues an emoji and a custom color for each build result (`SUCCESS`, `UNSTABLE` and `FAILURE`)
+#### Includes an emoji and a custom color for each build result (`SUCCESS`, `UNSTABLE` and `FAILURE`)
 
 ![Notification example][img-usecases-d]
 
@@ -166,6 +166,76 @@ def buildStatusWithColor = "<font color=\"${colors[buildResult] ?: ''}\">${curre
 
 googlechatnotification url: 'web hook(s) URL(s)',
     message: "${buildStatusIcon} ${buildStatusWithColor}: *${env.JOB_NAME}* - Build ${env.BUILD_ID} (<${env.BUILD_URL}|Details>)"
+```
+
+#### Simple card message
+
+![Notification example][img-usecases-e]
+
+*google-chat-build-notification.json*
+
+```json
+{
+   "cardsV2":[
+      {
+         "cardId":"unique-card-id",
+         "card":{
+            "header":{
+               "title":"${JOB_NAME}",
+               "subtitle":"Build ${BUILD_ID}",
+               "imageUrl":"https://developers.google.com/chat/images/quickstart-app-avatar.png",
+               "imageType":"CIRCLE"
+            },
+            "sections":[
+               {
+                  "header":"${BUILD_STATUS}",
+                  "collapsible":true,
+                  "uncollapsibleWidgetsCount":1,
+                  "widgets":[
+                     {
+                        "textParagraph":{
+                           "text":"Click <a href=\"${BUILD_URL}\">here</a> for more info"
+                        }
+                     },
+                     {
+                        "divider":{}
+                     },
+                     {
+                        "decoratedText":{
+                           "icon":{
+                              "knownIcon":"PERSON"
+                           },
+                           "topLabel":"Last commit",
+                           "text":"<i>${GIT_LAST_COMMIT}</i>",
+                           "bottomLabel":"Author: ${GIT_LAST_AUTHOR}"
+                        }
+                     }
+                  ]
+               }
+            ]
+         }
+      }
+   ]
+}
+```
+
+See [Format a card message](google-chat-format-card-message) for instructions on how to format text in a card message.
+
+- You may use [Pipeline Utility Steps](#jenkins-pipeline-read-json) to read a JSON file in the workspace.
+- You may use [Config File Provider](#jenkins-config-file-provider) to copy a JSON file stored globally in Jenkins.
+
+*Pipeline*
+
+```groovy
+// read from workspace
+def cardConfig = readJSON file: 'google-chat-build-notification.json'
+googlechatnotification url: 'web hook(s) URL(s)', messageFormat: 'card', message: cardConfig.toString()
+
+// read from global config file
+configFileProvider([configFile(fileId: '9d792a84-6224-4529-aa30-2296e97df64e', targetLocation: 'google-chat-build-notification.json')]) {
+	def cardConfig = readJSON file: 'google-chat-build-notification.json'
+	googlechatnotification url: 'web hook(s) URL(s)', messageFormat: 'card', message: cardConfig.toString()
+}
 ```
 
 ## Freestyle job
@@ -182,14 +252,14 @@ Use the syntax `<users/{GOOGLE_CHAT_USER_ID}>` in a message to mention users dir
 When testing the connection, you may see errors like:
 
 ```text
-    WARNING j.p.googlechat.StandardGoogleChatService#publish: Invalid Google Chat Notification URL found:
+    WARNING j.p.googlechat.StandardGoogleChatService#publish: Invalid Google Chat Notification URL found: xxx
 ```
 
 There's a couple of things to try:
 
 ### Enable additional logging
 
-Add a [log recorder](https://support.cloudbees.com/hc/en-us/articles/204880580-How-do-I-create-a-logger-in-Jenkins-for-troubleshooting-and-diagnostic-information-) for the [StandardSlackService](https://github.com/jenkinsci/google-chat-notification-plugin/blob/master/src/main/java/jenkins/plugins/googlechat/StandardGoogleChatService.java) class this should give you additional details on what's going on.
+Add a [log recorder](https://support.cloudbees.com/hc/en-us/articles/204880580-How-do-I-create-a-logger-in-Jenkins-for-troubleshooting-and-diagnostic-information-) for the [StandardGoogleChatService](https://github.com/jenkinsci/google-chat-notification-plugin/blob/master/src/main/java/jenkins/plugins/googlechat/StandardGoogleChatService.java) class this should give you additional details on what's going on.
 
 If you still can't figure it out please raise an issue with as much information as possible about your config and any relevant logs.
 
@@ -234,6 +304,12 @@ Please report issues and enhancements through the [Jenkins issue tracker](https:
 
 [google-chat-user-id]: https://stackoverflow.com/questions/49439731/how-can-a-webhook-identify-user-ids
 
+[google-chat-format-card-message]: https://developers.google.com/chat/format-messages#card-formatting
+
+[jenkins-pipeline-read-json]: https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readjson-read-json-from-files-in-the-workspace
+
+[jenkins-config-file-provider]: https://plugins.jenkins.io/config-file-provider/
+
 [img-plugin-manager]: docs/plugin-manager.png
 
 [img-configure-web-hook]: docs/configure-web-hook.png
@@ -253,3 +329,5 @@ Please report issues and enhancements through the [Jenkins issue tracker](https:
 [img-usecases-c]: docs/usecases-c.png
 
 [img-usecases-d]: docs/usecases-d.png
+
+[img-usecases-e]: docs/usecases-e.png

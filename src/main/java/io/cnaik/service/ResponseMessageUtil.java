@@ -65,9 +65,10 @@ public class ResponseMessageUtil {
                 });
     }
 
-    private Optional<JSONObject> toJson(String message) {
+    private Optional<JSONObject> toJson(String jsonMessage) {
         try {
-            return Optional.of(new JSONObject(message));
+            logUtil.printDebug("Parsing JSON config:\n%s", jsonMessage);
+            return Optional.of(new JSONObject(jsonMessage));
         } catch (JSONException exception) {
             logUtil.printLog(Messages.exceptionProcessingJsonMessage(exception.getMessage()));
             return Optional.empty();
@@ -103,10 +104,10 @@ public class ResponseMessageUtil {
 
             if (buildStatus == Result.FAILURE) {
                 outputString = outputString.replace(JENKINS_BUILD_STATUS_ENV_VAR,
-                        "<font color=\"" + HEX_COLOR_RED + "\">" + JENKINS_BUILD_STATUS_ENV_VAR + "</font>");
+                        "<font color=\\\"" + HEX_COLOR_RED + "\\\">" + JENKINS_BUILD_STATUS_ENV_VAR + "</font>");
             } else {
                 outputString = outputString.replace(JENKINS_BUILD_STATUS_ENV_VAR,
-                        "<font color=\"" + HEX_COLOR_TEAL + "\">" + JENKINS_BUILD_STATUS_ENV_VAR + "</font>");
+                        "<font color=\\\"" + HEX_COLOR_TEAL + "\\\">" + JENKINS_BUILD_STATUS_ENV_VAR + "</font>");
             }
         } else {
             return outputString;

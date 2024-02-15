@@ -44,7 +44,8 @@ public class CommonUtil {
     private GoogleChatRequest createGoogleChatRequest() {
         GoogleChatRequest request;
         if (googleChatNotification.isCardMessageFormat()) {
-            request = responseMessageUtil.createCardMessage().orElse(null);
+            request = responseMessageUtil.createCardMessage()
+                    .orElse(GoogleChatRequest.newSimpleRequest().withMessage(Messages.unableToProcessCardMessageJsonConfig()).build());
         } else {
             request = responseMessageUtil.createTextMessage();
         }

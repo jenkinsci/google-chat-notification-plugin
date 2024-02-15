@@ -24,7 +24,7 @@ This Jenkins plugin allows you to send Google Chat notification as a post build 
 
 ## Pipeline job
 
-### Simpliest configuration
+### Minimal configuration
 
     googlechatnotification url: 'web hook(s) URL(s)', message: 'message to be sent'
 

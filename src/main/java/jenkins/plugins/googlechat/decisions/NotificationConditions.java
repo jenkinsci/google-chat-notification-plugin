@@ -19,6 +19,9 @@ public class NotificationConditions implements Predicate<Context> {
         return new NotificationConditions(Arrays.asList(
                 new OnAborted(preferences, log),
                 new OnSingleFailure(preferences, log),
+                new OnRepeatedFailure(preferences, log),
+                new OnEveryFailure(preferences, log),
+                new OnRegression(preferences, log),
                 new OnNotBuilt(preferences, log),
                 new OnBackToNormal(preferences, log),
                 new OnSuccess(preferences, log),

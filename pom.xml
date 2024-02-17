@@ -44,7 +44,6 @@
 
 	<properties>
 		<changelist>999999-SNAPSHOT</changelist>
-    
 		<gitHubRepo>jenkinsci/google-chat-notification-plugin</gitHubRepo>
 
 		<jenkins.version>2.375.4</jenkins.version>

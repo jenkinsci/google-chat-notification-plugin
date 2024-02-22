@@ -14,7 +14,7 @@
 
 	<name>Google Chat Notification</name>
 	<description>Google Chat Notification for build status</description>
-	<url>https://github.com/jenkinsci/google-chat-notification-plugin</url>
+	<url>https://plugins.jenkins.io/google-chat-notification</url>
 
 	<licenses>
 		<license>

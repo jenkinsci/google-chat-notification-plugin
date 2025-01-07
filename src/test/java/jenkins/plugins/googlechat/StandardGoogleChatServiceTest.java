@@ -141,6 +141,7 @@ public class StandardGoogleChatServiceTest {
         private final CredentialsObtainer credentialsObtainer;
 
         public StandardGoogleChatServiceStub(HttpClient httpClient, CredentialsObtainer credentialsObtainer) {
+            super(null);
             this.httpClient = httpClient;
             this.credentialsObtainer = credentialsObtainer;
         }

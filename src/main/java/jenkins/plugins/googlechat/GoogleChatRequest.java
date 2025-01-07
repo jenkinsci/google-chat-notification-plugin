@@ -1,5 +1,7 @@
 package jenkins.plugins.googlechat;
 
+import java.nio.charset.StandardCharsets;
+
 import org.json.JSONObject;
 import org.springframework.web.util.UriUtils;
 
@@ -7,7 +9,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class GoogleChatRequest {
 
-    private static final String DEFAULT_ENCODING = "UTF-8";
+    private static final String DEFAULT_ENCODING = StandardCharsets.UTF_8.name();
 
     private final String message;
     private final String thread;

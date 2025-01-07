@@ -5,6 +5,7 @@ import io.cnaik.GoogleChatNotification;
 import io.cnaik.Messages;
 import jenkins.plugins.googlechat.GoogleChatRequest;
 import jenkins.plugins.googlechat.GoogleChatService;
+import jenkins.plugins.googlechat.HttpClientProvider;
 import jenkins.plugins.googlechat.StandardGoogleChatService;
 import jenkins.plugins.googlechat.decisions.Context;
 import jenkins.plugins.googlechat.decisions.NotificationConditions;
@@ -22,7 +23,7 @@ public class CommonUtil {
         this.build = googleChatNotification.getBuild();
         this.logUtil = googleChatNotification.getLogUtil();
         this.responseMessageUtil = googleChatNotification.getResponseMessageUtil();
-        this.googleChatService = new StandardGoogleChatService();
+        this.googleChatService = new StandardGoogleChatService(new HttpClientProvider());
     }
 
     public void send() {

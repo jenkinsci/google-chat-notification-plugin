@@ -1,7 +1,7 @@
 package jenkins.plugins.googlechat;
 
 import com.cloudbees.plugins.credentials.CredentialsProvider;
-import hudson.model.Item;
+import hudson.model.Job;
 import hudson.model.Run;
 import hudson.security.ACL;
 import jenkins.model.Jenkins;
@@ -50,8 +50,8 @@ public class CredentialsObtainerTest {
     public void lookupUsesItemContext_and_doesNotUseSystemContext() {
         // Arrange
         Run<?, ?> run = mock(Run.class);
-        Item item = mock(Item.class);
-        when(run.getParent()).thenAnswer(invocation -> item);
+        Job<?, ?> job = mock(Job.class);
+        when(run.getParent()).thenAnswer(invocation -> job);
 
         // Prepare a system-scoped credential that would be returned if lookup used Jenkins.get() + ACL.SYSTEM
         StringCredentials systemCred = mock(StringCredentials.class);
@@ -74,7 +74,7 @@ public class CredentialsObtainerTest {
         credentialsProviderStatic.when(() ->
                         CredentialsProvider.lookupCredentials(
                                 eq(StringCredentials.class),
-                                eq(item),
+                                eq(job),
                                 any(),
                                 any(List.class)))
                 .thenReturn(Collections.emptyList());
@@ -89,7 +89,7 @@ public class CredentialsObtainerTest {
         credentialsProviderStatic.verify(() ->
                 CredentialsProvider.lookupCredentials(
                         eq(StringCredentials.class),
-                        eq(item),
+                        eq(job),
                         any(),
                         any(List.class)));
     }

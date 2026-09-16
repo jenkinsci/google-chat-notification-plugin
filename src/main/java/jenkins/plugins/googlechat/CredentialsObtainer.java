@@ -1,22 +1,34 @@
 package jenkins.plugins.googlechat;
 
-import java.util.Collections;
-
-import org.jenkinsci.plugins.plaincredentials.StringCredentials;
-
 import com.cloudbees.plugins.credentials.CredentialsMatcher;
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-
-import hudson.security.ACL;
+import hudson.model.Item;
+import hudson.model.Run;
 import jenkins.model.Jenkins;
+import org.jenkinsci.plugins.plaincredentials.StringCredentials;
+
+import java.util.Collections;
 
 public class CredentialsObtainer {
 
-    public StringCredentials lookupCredentials(String credentialId) {
-        var credentials = CredentialsProvider.lookupCredentials(StringCredentials.class, Jenkins.get(), ACL.SYSTEM, Collections.<DomainRequirement>emptyList());
+    public StringCredentials lookupCredentials(String credentialId, Run<?, ?> run) {
+        var domainRequirements = Collections.<DomainRequirement>emptyList();
         CredentialsMatcher matcher = CredentialsMatchers.withId(credentialId);
-        return CredentialsMatchers.firstOrNull(credentials, matcher);
+
+        if (run != null) {
+            Item item = run.getParent();
+            var auth = Jenkins.getAuthentication();
+            var credentials = CredentialsProvider.lookupCredentials(StringCredentials.class, item, auth, domainRequirements);
+            return CredentialsMatchers.firstOrNull(credentials, matcher);
+        } else {
+            return null;
+        }
+    }
+
+    @Deprecated
+    public StringCredentials lookupCredentials(String credentialId) {
+        return null;
     }
 }

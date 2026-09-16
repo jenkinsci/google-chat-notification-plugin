@@ -35,7 +35,7 @@ public class CommonUtil {
             logUtil.printLog("%s", Messages.finalFormattedText(request.getBody()));
 
             String[] urlDetails = googleChatNotification.getUrl().split(",");
-            var success = googleChatService.publish(request, urlDetails);
+            var success = googleChatService.publish(build, request, urlDetails);
             if (!success) {
                 logUtil.printLog(Messages.operationMayHaveFailed());
             }
@@ -60,7 +60,7 @@ public class CommonUtil {
         } else {
             var conditions = NotificationConditions.create(googleChatNotification, logUtil.getLogger());
             return conditions.noneConditionsUserPreferencesMatches() // all the notify* options are disabled, so will activate all of them
-                    || conditions.test(new Context(build, build.getPreviousBuild()));
+                   || conditions.test(new Context(build, build.getPreviousBuild()));
         }
     }
 }

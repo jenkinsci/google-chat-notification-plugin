@@ -12,6 +12,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandler;
 
+import hudson.model.Run;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import org.junit.After;
 import org.junit.Before;
@@ -42,14 +43,14 @@ public class StandardGoogleChatServiceTest {
     public void shouldReturnFalseWhenNoNotificationUrls() {
         var request = GoogleChatRequest.newSimpleRequest().withMessage("Hello!").build();
         var service = new StandardGoogleChatServiceStub(httpClient);
-        assertThat(service.publish(request)).isFalse();
+        assertThat(service.publish(null, request)).isFalse();
     }
 
     @Test
     public void shouldReturnFalseWhenOnlyInvalidNotificationUrls() {
         var request = GoogleChatRequest.newSimpleRequest().withMessage("Hello!").build();
         var service = new StandardGoogleChatServiceStub(httpClient);
-        assertThat(service.publish(request, "invalid URL", "ftp://invalid", "test://jenkins.com")).isFalse();
+        assertThat(service.publish(null, request, "invalid URL", "ftp://invalid", "test://jenkins.com")).isFalse();
     }
 
     @Test
@@ -65,7 +66,7 @@ public class StandardGoogleChatServiceTest {
         when(httpClient.send(any(HttpRequest.class), any(BodyHandler.class)))
                 .thenReturn(response);
 
-        assertThat(service.publish(request, "http://google.com/test?token=123")).isFalse();
+        assertThat(service.publish(null, request, "http://google.com/test?token=123")).isFalse();
     }
 
     @Test
@@ -76,7 +77,7 @@ public class StandardGoogleChatServiceTest {
         when(httpClient.send(any(HttpRequest.class), any(BodyHandler.class)))
                 .thenThrow(IOException.class);
 
-        assertThat(service.publish(request, "http://google.com/test?token=123")).isFalse();
+        assertThat(service.publish(null, request, "http://google.com/test?token=123")).isFalse();
     }
 
     @Test
@@ -92,7 +93,7 @@ public class StandardGoogleChatServiceTest {
         when(httpClient.send(any(HttpRequest.class), any(BodyHandler.class)))
                 .thenReturn(response);
 
-        assertThat(service.publish(request, "http://google.com/test?token=123")).isTrue();
+        assertThat(service.publish(null, request, "http://google.com/test?token=123")).isTrue();
     }
 
     @Test
@@ -108,7 +109,7 @@ public class StandardGoogleChatServiceTest {
 
         when(secret.getPlainText()).thenReturn("http://google.com/test?token=123");
         when(stringCredentials.getSecret()).thenReturn(secret);
-        when(credentialsObtainer.lookupCredentials(anyString())).thenReturn(stringCredentials);
+        when(credentialsObtainer.lookupCredentials(anyString(), any(Run.class))).thenReturn(stringCredentials);
 
         when(response.statusCode()).thenReturn(200);
         when(response.body()).thenReturn("OK!");
@@ -116,7 +117,8 @@ public class StandardGoogleChatServiceTest {
         when(httpClient.send(any(HttpRequest.class), any(BodyHandler.class)))
                 .thenReturn(response);
 
-        assertThat(service.publish(request, "id:credential_id_for_room1")).isTrue();
+        var run = mock(Run.class);
+        assertThat(service.publish(run, request, "id:credential_id_for_room1")).isTrue();
     }
 
     @Test
@@ -132,7 +134,7 @@ public class StandardGoogleChatServiceTest {
         when(httpClient.send(any(HttpRequest.class), any(BodyHandler.class)))
                 .thenReturn(response);
 
-        assertThat(service.publish(request, "http://google.com/test?token=123")).isTrue();
+        assertThat(service.publish(null, request, "http://google.com/test?token=123")).isTrue();
     }
 
     public static class StandardGoogleChatServiceStub extends StandardGoogleChatService {

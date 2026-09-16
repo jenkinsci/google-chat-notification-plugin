@@ -263,6 +263,18 @@ Add a [log recorder](https://support.cloudbees.com/hc/en-us/articles/204880580-H
 
 If you still can't figure it out please raise an issue with as much information as possible about your config and any relevant logs.
 
+// ... existing code ...
+
+## Security / behavior change (credentials)
+
+As of this release the plugin resolves credentials referenced as `id:<credentialId>` in URLs using the job/build context (Run). This prevents credentials with the "System" scope (global) from being used by users who only have item-level permissions (e.g. Item/Configure), mitigating accidental exposure of sensitive credentials (CVE-2026-70442).
+
+Practical consequences:
+- If you used a System-scoped credential inside a job using `id:...`, that configuration will stop working for users who do not have administrative privileges.
+- If you intentionally relied on allowing jobs to access System-scoped credentials in your Jenkins installation, review your credential scopes and permission model. Move credentials to an appropriate scope (e.g. folder/item) or grant proper permissions to users that actually require access.
+
+We recommend reviewing jobs that use `id:<credentialId>` after upgrading and adjust credential scopes or permissions as needed.
+
 ## Developer instructions
 
 Install Maven and JDK.

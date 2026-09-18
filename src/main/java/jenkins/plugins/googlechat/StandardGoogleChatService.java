@@ -1,5 +1,10 @@
 package jenkins.plugins.googlechat;
 
+import hudson.model.Run;
+import io.cnaik.Messages;
+import io.cnaik.model.google.MessageReplyOption;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -8,11 +13,6 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.commons.lang3.StringUtils;
-
-import io.cnaik.Messages;
-import io.cnaik.model.google.MessageReplyOption;
 
 public class StandardGoogleChatService implements GoogleChatService {
 
@@ -34,7 +34,7 @@ public class StandardGoogleChatService implements GoogleChatService {
     }
 
     @Override
-    public boolean publish(GoogleChatRequest request, String... notificationUrls) {
+    public boolean publish(Run<?, ?> run, GoogleChatRequest request, String... notificationUrls) {
         boolean success = false;
         String[] url;
 
@@ -43,12 +43,12 @@ public class StandardGoogleChatService implements GoogleChatService {
             success = call(urlDetail, request);
 
             if (!success && StringUtils.isNotEmpty(urlDetail)
-                    && urlDetail.trim().startsWith("id:")) {
+                && urlDetail.trim().startsWith("id:")) {
 
                 url = urlDetail.trim().split("id:");
 
                 var credentialsObtainer = getCredentialsObtainer();
-                var stringCredentials = credentialsObtainer.lookupCredentials(url[1]);
+                var stringCredentials = credentialsObtainer.lookupCredentials(url[1], run);
 
                 if (stringCredentials != null) {
                     success = call(stringCredentials.getSecret().getPlainText(), request);

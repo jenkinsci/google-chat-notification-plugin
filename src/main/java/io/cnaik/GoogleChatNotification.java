@@ -359,19 +359,18 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-            // set that to properties and call save().
-            url = formData.getString("url");
-            message = formData.getString("message");
-            messageFormat = MessageFormat.valueOf(formData.getString("messageFormat"));
-            sameThreadNotification = formData.getBoolean("sameThreadNotification");
-            threadKey = formData.getString("threadKey");
-            notifyAborted = formData.getBoolean("notifyAborted");
-            notifyFailure = formData.getBoolean("notifyFailure");
-            notifyNotBuilt = formData.getBoolean("notifyNotBuilt");
-            notifySuccess = formData.getBoolean("notifySuccess");
-            notifyUnstable = formData.getBoolean("notifyUnstable");
-            notifyBackToNormal = formData.getBoolean("notifyBackToNormal");
-            suppressInfoLoggers = formData.getBoolean("suppressInfoLoggers");
+            setUrl(formData.getString("url"));
+            setMessage(formData.getString("message"));
+            setMessageFormat(MessageFormat.valueOf(formData.getString("messageFormat")));
+            setSameThreadNotification(formData.getBoolean("sameThreadNotification"));
+            setThreadKey(formData.getString("threadKey"));
+            setNotifyAborted(formData.getBoolean("notifyAborted"));
+            setNotifyFailure(formData.getBoolean("notifyFailure"));
+            setNotifyNotBuilt(formData.getBoolean("notifyNotBuilt"));
+            setNotifySuccess(formData.getBoolean("notifySuccess"));
+            setNotifyUnstable(formData.getBoolean("notifyUnstable"));
+            setNotifyBackToNormal(formData.getBoolean("notifyBackToNormal"));
+            setSuppressInfoLoggers(formData.getBoolean("suppressInfoLoggers"));
 
             // ^Can also use req.bindJSON(this, formData);
             save();
@@ -382,48 +381,108 @@ public class GoogleChatNotification extends Notifier implements SimpleBuildStep 
             return url;
         }
 
+        @DataBoundSetter
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
         public String getMessage() {
             return message;
+        }
+
+        @DataBoundSetter
+        public void setMessage(String message) {
+            this.message = message;
         }
 
         public MessageFormat getMessageFormat() {
             return messageFormat != null ? messageFormat : defaultMessageFormat;
         }
 
+        @DataBoundSetter
+        public void setMessageFormat(MessageFormat messageFormat) {
+            this.messageFormat = messageFormat;
+        }
+
         public boolean isSameThreadNotification() {
             return sameThreadNotification;
+        }
+
+        @DataBoundSetter
+        public void setSameThreadNotification(boolean sameThreadNotification) {
+            this.sameThreadNotification = sameThreadNotification;
         }
 
         public String getThreadKey() {
             return threadKey;
         }
 
+        @DataBoundSetter
+        public void setThreadKey(String threadKey) {
+            this.threadKey = threadKey;
+        }
+
         public boolean isNotifyAborted() {
             return notifyAborted;
+        }
+
+        @DataBoundSetter
+        public void setNotifyAborted(boolean notifyAborted) {
+            this.notifyAborted = notifyAborted;
         }
 
         public boolean isNotifyFailure() {
             return notifyFailure;
         }
 
+        @DataBoundSetter
+        public void setNotifyFailure(boolean notifyFailure) {
+            this.notifyFailure = notifyFailure;
+        }
+
         public boolean isNotifyNotBuilt() {
             return notifyNotBuilt;
+        }
+
+        @DataBoundSetter
+        public void setNotifyNotBuilt(boolean notifyNotBuilt) {
+            this.notifyNotBuilt = notifyNotBuilt;
         }
 
         public boolean isNotifySuccess() {
             return notifySuccess;
         }
 
+        @DataBoundSetter
+        public void setNotifySuccess(boolean notifySuccess) {
+            this.notifySuccess = notifySuccess;
+        }
+
         public boolean isNotifyUnstable() {
             return notifyUnstable;
+        }
+
+        @DataBoundSetter
+        public void setNotifyUnstable(boolean notifyUnstable) {
+            this.notifyUnstable = notifyUnstable;
         }
 
         public boolean isNotifyBackToNormal() {
             return notifyBackToNormal;
         }
 
+        @DataBoundSetter
+        public void setNotifyBackToNormal(boolean notifyBackToNormal) {
+            this.notifyBackToNormal = notifyBackToNormal;
+        }
+
         public boolean isSuppressInfoLoggers() {
             return suppressInfoLoggers;
+        }
+
+        @DataBoundSetter
+        public void setSuppressInfoLoggers(boolean suppressInfoLoggers) {
+            this.suppressInfoLoggers = suppressInfoLoggers;
         }
     }
 
